@@ -1,10 +1,10 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
-function NextButton({children}) {
+function NextButton({ children, onClick }) {
 	return (
-		<View style = {styles.buttonContainer}>
-			<Pressable style = {styles.buttonPressable}>
-				<Text style = {styles.innerText}>{children}</Text>
+		<View style={styles.buttonContainer}>
+			<Pressable style={styles.buttonPressable} onPress={onClick}>
+				<Text style={styles.innerText}>{children}</Text>
 			</Pressable>
 		</View>
 	);
@@ -12,20 +12,23 @@ function NextButton({children}) {
 
 export default NextButton;
 
-
 const styles = StyleSheet.create({
-    buttonContainer : {
-        backgroundColor : '#6CD2D9',
-        height : 50,
-        borderRadius : 35,
-        alignItems : 'center',
-        justifyContent : 'center',
-        marginHorizontal : '30%',
-        opacity : 0.8
-    },
-    innerText : {
-        fontFamily : 'Montserrat',
-        fontSize : 18
-    }
-    
-})
+	buttonContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+        marginHorizontal : "30%",
+        margin : 5,
+	},
+	innerText: {
+        fontFamily: "Montserrat",
+		fontSize: 18,
+	},
+	buttonPressable: {
+        // backgroundColor: "blue",
+        backgroundColor: "#6CD2D9",
+		paddingVertical: 12,
+        paddingHorizontal: 30,
+        // elevation : 2
+        borderRadius : 35
+	},
+});
