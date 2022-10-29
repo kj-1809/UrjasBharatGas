@@ -16,19 +16,19 @@ const styles = StyleSheet.create({
 	buttonContainer: {
 		alignItems: "center",
 		justifyContent: "center",
-        marginHorizontal : "30%",
-        margin : 5,
+		marginHorizontal: "30%",
+		margin: 5,
 	},
 	innerText: {
-        fontFamily: "Montserrat",
+		fontFamily: "Montserrat",
 		fontSize: 18,
 	},
 	buttonPressable: {
-        // backgroundColor: "blue",
-        backgroundColor: "#6CD2D9",
+		// backgroundColor: "blue",
+		backgroundColor: "#6CD2D9",
 		paddingVertical: 12,
-        paddingHorizontal: 30,
-        // elevation : 2
-        borderRadius : 35
+		paddingHorizontal: 30,
+		// elevation : 2
+		borderRadius: 35,
 	},
 });
