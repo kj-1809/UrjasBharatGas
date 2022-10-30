@@ -1,8 +1,8 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
-function NextButton({ children, onClick }) {
+function NextButton({ children, onClick , style }) {
 	return (
-		<View style={styles.buttonContainer}>
+		<View style={[styles.buttonContainer , style]}>
 			<Pressable style={styles.buttonPressable} onPress={onClick}>
 				<Text style={styles.innerText}>{children}</Text>
 			</Pressable>

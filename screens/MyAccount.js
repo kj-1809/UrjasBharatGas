@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, ScrollView} from "react-native";
 import NextButton from "../components/NextButton";
+import InputWithText from "../components/InputWithText"
 
 function MyAccount() {
   const [password , setPassword] = useState('Password')
@@ -25,55 +26,17 @@ function MyAccount() {
 
 	return (
 		<View style={styles.container}>
-			{/* <Text style={styles.myAccountText}>My Account</Text> */}
+			<Text style={styles.headingStyle}>My Account</Text>
 			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior="padding">
 				<ScrollView>
 					<View style={styles.inputContainer}>
-						<View style={styles.inputView}>
-							<TextInput
-								placeholder="Name"
-								style={styles.inputText}
-                editable = {false}
-                value = "Olivia"
-                />
-						</View>
-						<View style={styles.inputView}>
-							<TextInput
-								placeholder="Email"
-								style={styles.inputText}
-                editable = {false}
-                value = "olivia@icloud.com"
-							/>
-						</View>
-						<View style={styles.inputView}>
-							<TextInput
-								placeholder="Password"
-								style={styles.inputText}
-								autoCapitalize={false}
-								autoCorrect={false}
-								onChangeText={handlePasswordChange}
-								value={password}
-							/>
-						</View>
+
+						<InputWithText value = "Olivia" title = "Name"/>
+						<InputWithText value = "olivia@icloud.com" title = "Email"/>
+						<InputWithText value = "somerandompass" title = "Password"/>
+						<InputWithText value = "Pine View Street , 7th Ave" title = "Address"/>
+						<InputWithText value = "P1ACXCR7266L" title = "GSTIN"/>
 						
-						<View style={styles.inputView}>
-							<TextInput
-								placeholder="Address"
-								style={styles.inputText}
-								onChangeText={handleAddressChange}
-								value={address}
-							/>
-						</View>
-						<View style={styles.inputView}>
-							<TextInput
-								placeholder="GSTIN (optional)"
-								style={styles.inputText}
-								autoCapitalize={false}
-								autoCorrect={false}
-								onChangeText={handleGstinChange}
-								value={gstin}
-							/>
-						</View>
 					</View>
 					<View style={styles.submitContainer}>
 						<NextButton onClick={handleSubmit}>Submit</NextButton>
@@ -87,24 +50,25 @@ function MyAccount() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		alignItems : 'center'
 	},
-	myAccountText: {
+	headingStyle: {
 		fontSize: 50,
 		marginTop: "5%",
-		marginLeft: "7%",
 		fontFamily: "MontserratSemiBold",
 	},
 	inputContainer: {
 		// backgroundColor: "green",
 		// marginTop: "20%",
 		marginHorizontal: "3%",
+		marginTop : "15%"
 		// padding : 10
 	},
 	inputView: {
 		height: 50,
 		margin: 10,
-		backgroundColor: "white",
 		borderRadius: 15,
+		backgroundColor : 'white',
 		justifyContent: "center",
 		shadowColor: "black",
 		shadowOpacity: 0.4,
@@ -123,7 +87,6 @@ const styles = StyleSheet.create({
 	},
 	scrollViewStyle: {
 		flex: 1,
-		marginVertical: 30,
 	},
 });
 
