@@ -12,26 +12,21 @@ import {
 import NextButton from "../components/NextButton";
 const deviceWidth = Dimensions.get("screen").width;
 
+function OrderSummary({ navigation, route }) {
+	const [quantity, setQuantity] = useState(1);
 
-function OrderSummary({navigation , route}) {
-
-	const [quantity , setQuantity] = useState(1)
-
-	function handleSubmit(){
-		navigation.navigate('Homepage')
+	function handleSubmit() {
+		navigation.navigate("Homepage");
 	}
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.headingText}>Order Summary</Text>
-			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior="padding">
+			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior="position">
+				<Text style={styles.headingText}>Order Summary</Text>
 				<ScrollView>
 					<View style={styles.imageWholeContainer}>
 						<View style={styles.imageContainer}>
-							<Image
-								source={route.params.img}
-								style={styles.image}
-							/>
+							<Image source={route.params.img} style={styles.image} />
 						</View>
 					</View>
 					<View style={styles.detailsContainer}>
@@ -45,16 +40,21 @@ function OrderSummary({navigation , route}) {
 								placeholder="Quantity"
 								keyboardType="number-pad"
 								onChangeText={setQuantity}
-								value = {quantity}
+								value={quantity}
 							/>
 						</View>
 					</View>
 					<View style={styles.totalContainer}>
 						<Text style={styles.totalText}>Quantity : {quantity}</Text>
-						<Text style={styles.totalText}>Total : {route.params.price} x {quantity} = {route.params.price * quantity}</Text>
+						<Text style={styles.totalText}>
+							Total : {route.params.price} x {quantity} ={" "}
+							{route.params.price * quantity}
+						</Text>
 					</View>
 					<View style={styles.submitContainer}>
-						<NextButton style={styles.buttonStyle} onClick = {handleSubmit}>Place Order</NextButton>
+						<NextButton style={styles.buttonStyle} onClick={handleSubmit}>
+							Place Order
+						</NextButton>
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>
@@ -66,12 +66,13 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: "center",
-    marginBottom : 1
+		marginBottom: 1,
 	},
 	headingText: {
 		fontFamily: "MontserratSemiBold",
 		fontSize: 35,
 		marginTop: "2%",
+		textAlign : 'center'
 	},
 	imageContainer: {
 		height: (deviceWidth / 2 - 30) * (4 / 3),
@@ -104,8 +105,8 @@ const styles = StyleSheet.create({
 		marginHorizontal: "5%",
 	},
 	inputWholeContainer: {
-    alignItems : 'center'
-  },
+		alignItems: "center",
+	},
 	inputContainer: {
 		height: 50,
 		margin: 10,
