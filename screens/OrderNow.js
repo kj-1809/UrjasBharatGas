@@ -42,7 +42,19 @@ const Products = [
 ]
 
 
-function OrderNow() {
+function OrderNow(props) {
+
+  function navigateToSummary(item){
+    
+    const data = {
+      productId : item.productId,
+      productName : item.productName,
+      price : item.price,
+      img : item.img,
+    }
+    props.navigation.navigate('OrderSummary' , data);
+  }
+
 	return (
 		<View style = {styles.container}>
 			<Text style = {styles.headingText}>Order Now</Text>
@@ -51,10 +63,9 @@ function OrderNow() {
         <FlatList numColumns={2} 
         data = {Products}
         renderItem = {(item) => {
-          return (<ProductView img = {item.item.img}/>)
+          return (<ProductView img = {item.item.img} onNavigate = {navigateToSummary.bind(this,item.item)}/>)
         }}
         keyExtractor = {(item) => item.productId}
-        // style = {{marginBottom : "10%"}}
         />
       </View>
 		</View>

@@ -83,6 +83,13 @@ function AuthenticatedStack() {
 					}}
 				/>
 				<Stack.Screen name="AboutUs" component={AboutUs} />
+				<Stack.Screen name="OrderSummary" component={OrderSummary} options = {{
+					title : "",
+					headerStyle : {
+						backgroundColor : 'white',
+					},
+					headerShadowVisible : false
+				}}/>
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
@@ -112,8 +119,8 @@ export default function App() {
 		<>
 			<StatusBar style="dark" />
 			{/* {screen} */}
-			{/* <AuthenticatedStack /> */}
-			<OrderSummary />
+			<AuthenticatedStack />
+			{/* <OrderSummary /> */}
 		</>
 	);
 }
