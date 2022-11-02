@@ -7,13 +7,14 @@ import OrderNow from "./screens/OrderNow";
 import MyOrders from "./screens/MyOrders";
 import MyAccount from "./screens/MyAccount";
 import AboutUs from "./screens/AboutUs";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import Homepage from "./screens/Homepage";
 import OrderSummary from "./screens/OrderSummary";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -106,18 +107,18 @@ export default function App() {
 		);
 	}
 
-	// onAuthStateChanged(auth, (user) => {
-	// 	if (user) {
-	// 		// User is signed in, see docs for a list of available properties
-	// 		// https://firebase.google.com/docs/reference/js/firebase.User
-	// 		console.log("logged in");
-	// 		console.log(user);
-	// 		// setScreen(<AuthenticatedStack />);
-	// 	} else {
-	// 		// not logged in
-	// 		console.log("Not logged in ! ");
-	// 	}
-	// });
+	
+
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (!user) {
+				setScreen(
+					<Login onSignUpPress={handleSignUpPress} onSuccess={handleAuthSuccess} />
+				);
+			}
+		});
+	} , [])
+
 
 	if (!fontsLoaded) {
 		return null;

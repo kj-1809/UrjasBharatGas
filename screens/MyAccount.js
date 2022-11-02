@@ -1,27 +1,28 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, ScrollView} from "react-native";
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, ScrollView , Alert} from "react-native";
 import NextButton from "../components/NextButton";
 import InputWithText from "../components/InputWithText"
+import {auth} from "../firebase"
+import { signOut } from "firebase/auth";
 
 function MyAccount() {
   const [password , setPassword] = useState('Password')
   const [address, setAddress] = useState("");
 	const [gstin, setGstin] = useState("");
 
-  function handlePasswordChange(text){
-    setPassword(text);
-  }
-  function handleAddressChange(text) {
-		setAddress(text);
-	}
-  function handleGstinChange(text) {
-		setGstin(text);
-	}
-
   function handleSubmit(){
     console.log("Submitted successfully !")
   }
 
+	function handleSignOut(){
+		signOut(auth).then(() => {
+			console.log("Sign out successfull")
+		}).catch((error) => {
+			console.log("error" , error)
+			Alert.alert("error" , error)
+		});		
+	}
+	
 
 
 	return (
@@ -40,6 +41,9 @@ function MyAccount() {
 					</View>
 					<View style={styles.submitContainer}>
 						<NextButton onClick={handleSubmit}>Submit</NextButton>
+					</View>
+					<View style={styles.submitContainer}>
+						<NextButton onClick={handleSignOut}>Sign out</NextButton>
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>

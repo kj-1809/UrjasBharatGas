@@ -45,10 +45,7 @@ function Login(props) {
 			});
 	}
 
-	if (loading) {
-		return <LoadingView message="Loggin you in ...." />;
-	}
-
+	
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
@@ -67,6 +64,9 @@ function Login(props) {
 		});
 	} , [])
 	
+	if (loading) {
+		return <LoadingView message="Loggin you in ...." />;
+	}
 	if(fetchingUser){
 		return null;
 	}
