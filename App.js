@@ -1,9 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
-import { LogBox } from "react-native";
-// import AppLoading from "expo-app-loading";
-// import Loading from "./components/Loading";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import OrderNow from "./screens/OrderNow";
@@ -13,12 +10,10 @@ import AboutUs from "./screens/AboutUs";
 import { useState } from "react";
 import Homepage from "./screens/Homepage";
 import OrderSummary from "./screens/OrderSummary";
-import {
-	DefaultTheme,
-	NavigationContainer,
-	StackActions,
-} from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,8 +21,8 @@ const myTheme = {
 	...DefaultTheme,
 	colors: {
 		...DefaultTheme.colors,
-		background: 'white',
-		primary: "#000000",
+		background: "white",
+		primary: "#6CD2D9",
 	},
 };
 
@@ -37,8 +32,9 @@ function AuthenticatedStack() {
 			<Stack.Navigator
 				screenOptions={{
 					headerStyle: {
-						backgroundColor: "#6CD2D9",
+						backgroundColor: "white",
 					},
+					headerShadowVisible: false,
 				}}
 			>
 				<Stack.Screen
@@ -48,27 +44,21 @@ function AuthenticatedStack() {
 						title: "",
 						headerStyle: {
 							backgroundColor: "#6CD2D9",
-							borderBottomWidth: 4,
 						},
-						headerShadowVisible: false,
 					}}
 				/>
-				<Stack.Screen name="OrderNow" component={OrderNow} options={{
-					title : "",
-					headerStyle : {
-						backgroundColor : 'white'
-					},
-					headerShadowVisible : false
-				}}/>
+				<Stack.Screen
+					name="OrderNow"
+					component={OrderNow}
+					options={{
+						title: "",
+					}}
+				/>
 				<Stack.Screen
 					name="MyOrders"
 					component={MyOrders}
 					options={{
 						title: "",
-						headerStyle: {
-							backgroundColor: "white",
-						},
-						headerShadowVisible : false,
 					}}
 				/>
 				<Stack.Screen
@@ -76,20 +66,16 @@ function AuthenticatedStack() {
 					component={MyAccount}
 					options={{
 						title: "",
-						headerStyle : {
-							backgroundColor : 'white',
-						},
-						headerShadowVisible : false,
 					}}
 				/>
 				<Stack.Screen name="AboutUs" component={AboutUs} />
-				<Stack.Screen name="OrderSummary" component={OrderSummary} options = {{
-					title : "",
-					headerStyle : {
-						backgroundColor : 'white',
-					},
-					headerShadowVisible : false
-				}}/>
+				<Stack.Screen
+					name="OrderSummary"
+					component={OrderSummary}
+					options={{
+						title: "",
+					}}
+				/>
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
@@ -102,25 +88,45 @@ export default function App() {
 	});
 
 	const [screen, setScreen] = useState(
-		<Login onSignUpPress={handleSignUpPress} />
+		<Login onSignUpPress={handleSignUpPress} onSuccess={handleAuthSuccess} />
 	);
 
+	function handleAuthSuccess() {
+		setScreen(<AuthenticatedStack />);
+	}
 	function handleLoginPress() {
-		setScreen(<Login onSignUpPress={handleSignUpPress} />);
+		setScreen(
+			<Login onSignUpPress={handleSignUpPress} onSuccess={handleAuthSuccess} />
+		);
 	}
 	function handleSignUpPress() {
 		console.log("signUP pressed");
-		setScreen(<Register onLoginPress={handleLoginPress} />);
+		setScreen(
+			<Register onLoginPress={handleLoginPress} onSuccess={handleAuthSuccess} />
+		);
 	}
+
+	// onAuthStateChanged(auth, (user) => {
+	// 	if (user) {
+	// 		// User is signed in, see docs for a list of available properties
+	// 		// https://firebase.google.com/docs/reference/js/firebase.User
+	// 		console.log("logged in");
+	// 		console.log(user);
+	// 		// setScreen(<AuthenticatedStack />);
+	// 	} else {
+	// 		// not logged in
+	// 		console.log("Not logged in ! ");
+	// 	}
+	// });
+
 	if (!fontsLoaded) {
 		return null;
 	}
-	return (
+
+	return(
 		<>
 			<StatusBar style="dark" />
-			{/* {screen} */}
-			<AuthenticatedStack />
-			{/* <OrderSummary /> */}
+			{screen}
 		</>
 	);
 }

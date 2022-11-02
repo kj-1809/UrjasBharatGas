@@ -12,36 +12,33 @@ import {
 import NextButton from "../components/NextButton";
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
+import LoadingView from "../components/LoadingView"
+
 
 function Register(props) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [name, setName] = useState("");
 	const [address, setAddress] = useState("");
 	const [gstin, setGstin] = useState("");
 	const [registerPending , setRegisterPending] = useState(false);
-
-	function handleEmailChange(text) {
-		setEmail(text);
-	}
-	function handlePasswordChange(text) {
-		setPassword(text);
-	}
-	function handleAddressChange(text) {
-		setAddress(text);
-	}
-	function handleNameChange(text) {
-		setName(text);
-	}
-	function handleGstinChange(text) {
-		setGstin(text);
-	}
-
+	
 	function handleSubmit() {
 		//Create a new user
 		setRegisterPending(true);
+		if(password != confirmPassword){
+			Alert.alert("Error" , "Password do not match !")
+			setRegisterPending(false)
+			return
+		}
+		if(password.length < 6){
+			Alert.alert("Error" , "Password length should be greater than 6 !")
+			setRegisterPending(false)
+			return
+		}
 		createUserWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				// Signed in
@@ -50,15 +47,20 @@ function Register(props) {
 				console.log("User id : ", user.uid);
 				// add all of the data to users collection in firestore
 				uploadUserData(user.uid);
-				// set a state variable to true that permits it to go the the homescreen
-				
+				// navigate to homescreen
+				setRegisterPending(false);
+				props.onSuccess()
 			})
 			.catch((error) => {
 				console.log(error.code);
 				console.log(error.message);
+				setRegisterPending(false);
 				Alert.alert("Error" , error.message);
 			});
-			setRegisterPending(false);
+	}
+
+	if(registerPending){
+		return <LoadingView message = "Registering User"/>
 	}
 
 	async function uploadUserData(uid) {
@@ -72,6 +74,7 @@ function Register(props) {
 				disc19: "0",
 				disc47: "0",
 				disc430: "0",
+				email : email,
 			});
 			console.log("Document written with ID: ", docRef.id);
 		} catch (e) {
@@ -103,7 +106,7 @@ function Register(props) {
 								placeholder="Name"
 								style={styles.inputText}
 								value={name}
-								onChangeText={handleNameChange}
+								onChangeText={setName}
 							/>
 						</View>
 						<View style={styles.inputView}>
@@ -112,7 +115,7 @@ function Register(props) {
 								style={styles.inputText}
 								autoCapitalize={false}
 								autoCorrect={false}
-								onChangeText={handleEmailChange}
+								onChangeText={setEmail}
 								value={email}
 							/>
 						</View>
@@ -123,7 +126,7 @@ function Register(props) {
 								secureTextEntry={true}
 								autoCapitalize={false}
 								autoCorrect={false}
-								onChangeText={handlePasswordChange}
+								onChangeText={setPassword}
 								value={password}
 							/>
 						</View>
@@ -132,13 +135,17 @@ function Register(props) {
 								placeholder="Confirm Password"
 								style={styles.inputText}
 								secureTextEntry={true}
+								autoCapitalize={false}
+								autoCorrect={false}
+								onChangeText={setConfirmPassword}
+								value={confirmPassword}
 							/>
 						</View>
 						<View style={styles.inputView}>
 							<TextInput
 								placeholder="Address"
 								style={styles.inputText}
-								onChangeText={handleAddressChange}
+								onChangeText={setAddress}
 								value={address}
 							/>
 						</View>
@@ -148,7 +155,7 @@ function Register(props) {
 								style={styles.inputText}
 								autoCapitalize={false}
 								autoCorrect={false}
-								onChangeText={handleGstinChange}
+								onChangeText={setGstin}
 								value={gstin}
 							/>
 						</View>

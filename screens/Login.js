@@ -7,44 +7,74 @@ import {
 	Pressable,
 	KeyboardAvoidingView,
 	ScrollView,
-	Alert
+	Alert,
 } from "react-native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import NextButton from "../components/NextButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import LoadingView from "../components/LoadingView";
+
+import { onAuthStateChanged } from "firebase/auth/react-native";
 
 function Login(props) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-
-	function handleEmailChange(text) {
-		setEmail(text);
-	}
-	function handlePasswordChange(text) {
-		setPassword(text);
-	}
+	const [loading, setLoading] = useState(false);
+	const [fetchingUser , setFetchingUser] = useState(true);
 
 	function handleSubmit() {
+		setLoading(true);
 		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				const user = userCredential.user;
 				console.log("User logged in successfully");
 				console.log(user.email);
 				console.log(user.uid);
+				setLoading(false);
+				//navigate to homepage
+				props.onSuccess();
 			})
 			.catch((error) => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
 				console.log(errorCode);
 				console.log(errorMessage);
-				Alert.alert("Error" , errorMessage);
+				Alert.alert("Error", errorMessage);
+				setLoading(false);
 			});
 	}
 
+	if (loading) {
+		return <LoadingView message="Loggin you in ...." />;
+	}
+
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				// User is signed in, see docs for a list of available properties
+				// https://firebase.google.com/docs/reference/js/firebase.User
+				console.log("logged in");
+				console.log(user);
+				props.onSuccess();
+				setFetchingUser(false)
+				// setScreen(<AuthenticatedStack />);
+			} else {
+				// not logged in
+				console.log("Not logged in ! ");
+				setFetchingUser(false)
+			}
+		});
+	} , [])
+	
+	if(fetchingUser){
+		return null;
+	}
+
+	
 	return (
 		<View style={styles.container}>
+			{console.log("in render")}
 			<View style={styles.backgroundContainer}>
 				<Image
 					source={require("../assets/images/Base.png")}
@@ -53,10 +83,7 @@ function Login(props) {
 			</View>
 			<Text style={styles.loginText}>Login</Text>
 			<Text style={styles.loginText2}>Please sign in to continue</Text>
-			<KeyboardAvoidingView
-				style={styles.scrollViewStyle}
-				behavior="padding"
-			>
+			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior="padding">
 				<ScrollView>
 					<View style={styles.inputContainer}>
 						<View style={styles.inputView}>
@@ -65,7 +92,7 @@ function Login(props) {
 								style={styles.inputText}
 								autoCapitalize={false}
 								autoCorrect={false}
-								onChangeText={handleEmailChange}
+								onChangeText={setEmail}
 								value={email}
 							/>
 						</View>
@@ -76,7 +103,7 @@ function Login(props) {
 								secureTextEntry={true}
 								autoCapitalize={false}
 								autoCorrect={false}
-								onChangeText={handlePasswordChange}
+								onChangeText={setPassword}
 								value={password}
 							/>
 						</View>
@@ -87,7 +114,7 @@ function Login(props) {
 					</View>
 
 					<View style={styles.signUpTextContainer}>
-						<Pressable onPress = {props.onSignUpPress}>
+						<Pressable onPress={props.onSignUpPress}>
 							<Text style={styles.signUpText}>
 								Don't have an account? Register
 							</Text>
@@ -95,7 +122,7 @@ function Login(props) {
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>
-		</View>
+		</View> 
 	);
 }
 
@@ -117,10 +144,8 @@ const styles = StyleSheet.create({
 		opacity: 0.5,
 	},
 	inputContainer: {
-		// backgroundColor: "green",
 		marginTop: "20%",
 		marginHorizontal: "3%",
-		// padding : 10
 	},
 	inputView: {
 		height: 50,
@@ -143,14 +168,13 @@ const styles = StyleSheet.create({
 		left: 0,
 	},
 	image: {
-		//check if this works normally
 		flex: 1,
 	},
 	submitContainer: {
 		marginTop: "10%",
 	},
 	signUpTextContainer: {
-		marginTop : "20%"
+		marginTop: "20%",
 	},
 	signUpText: {
 		fontFamily: "Montserrat",
@@ -160,7 +184,6 @@ const styles = StyleSheet.create({
 	},
 	scrollViewStyle: {
 		flex: 1,
-		// backgroundColor : 'blue'
 	},
 });
 

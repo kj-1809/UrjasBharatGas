@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
   },
   productsContainer : {
     marginTop : "10%",
-    // marginBottom : "10%"
     paddingBottom : "25%"
   }
 })

@@ -27,5 +27,3 @@ const auth = initializeAuth(app, { persistence: getReactNativePersistence(AsyncS
 const db = getFirestore(app);
 
 export {auth , db , app};
-
-// const analytics = getAnalytics(app);
