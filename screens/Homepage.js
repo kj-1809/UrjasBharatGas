@@ -1,7 +1,26 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import CustomButton from "../components/CustomButton";
-
+import { useState } from "react";
+import { collection, query, where, getDocs, doc } from "firebase/firestore";
+import { db,auth } from "../firebase";
+import LoadingView from "../components/LoadingView"
 function Homepage({ navigation }) {
+	const [name , setName] = useState("")
+	const currentUser = auth.currentUser;
+
+	const q = query(collection(db, "users"), where("uid", "==", currentUser.uid));
+	async function getDataFromFirebase(queryData){
+		const querySnapshot = await getDocs(queryData);
+		querySnapshot.forEach((doc) => {
+			setName(doc.data().name)
+		})
+	}
+	getDataFromFirebase(q)
+		
+	if(name.length == 0){
+		return (<LoadingView message = "loading.."/>)
+	}
+	
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -9,7 +28,7 @@ function Homepage({ navigation }) {
 					source={require("../assets/images/urjalogo.png")}
 					style={styles.imgStyle}
 				/>
-				<Text style={styles.welcomeText}>Welcome, Olivia</Text>
+				<Text style={styles.welcomeText}>Welcome, {name}</Text>
 			</View>
 
 			<View style={styles.buttonContainer}>
@@ -32,14 +51,20 @@ function Homepage({ navigation }) {
 					</CustomButton>
 				</View>
 				<View style={styles.buttonHorizontalContainer}>
-					<CustomButton style={{ backgroundColor: "#C8FFD4" }} onClick = {()=>{
-            navigation.navigate("MyAccount")
-          }}>
+					<CustomButton
+						style={{ backgroundColor: "#C8FFD4" }}
+						onClick={() => {
+							navigation.navigate("MyAccount");
+						}}
+					>
 						MY ACCOUNT
 					</CustomButton>
-					<CustomButton style={{ backgroundColor: "#BCCEF8" }} onClick = {()=>{
-            navigation.navigate("AboutUs")
-          }}>
+					<CustomButton
+						style={{ backgroundColor: "#BCCEF8" }}
+						onClick={() => {
+							navigation.navigate("AboutUs");
+						}}
+					>
 						ABOUT US
 					</CustomButton>
 				</View>

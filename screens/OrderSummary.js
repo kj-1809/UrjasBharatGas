@@ -8,15 +8,43 @@ import {
 	TextInput,
 	ScrollView,
 	KeyboardAvoidingView,
+	Alert,
 } from "react-native";
 import NextButton from "../components/NextButton";
 const deviceWidth = Dimensions.get("screen").width;
+import { auth, db } from "../firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import LoadingView from "../components/LoadingView"
 
 function OrderSummary({ navigation, route }) {
 	const [quantity, setQuantity] = useState(1);
+	const [loading, setLoading] = useState(false);
+	const currentUser = auth.currentUser;
+
+	async function uploadDataToFirebase() {
+		const querySnapshot = await getDocs(collection(db, "orders"));
+		console.log(querySnapshot.size);
+
+		const docRef = await addDoc(collection(db, "orders"), {
+			orderId: querySnapshot.size + 1,
+			price: route.params.price,
+			productId: route.params.productId,
+			productName: route.params.productName,
+			quantity: quantity,
+			uid: currentUser.uid,
+		});
+	}
 
 	function handleSubmit() {
+		setLoading(true);
+		uploadDataToFirebase();
+		setLoading(false);
 		navigation.navigate("Homepage");
+		Alert.alert("Success", "Your order was placed successfully !");
+	}
+
+	if (loading) {
+		return <LoadingView message="Loading..." />;
 	}
 
 	return (
@@ -26,7 +54,7 @@ function OrderSummary({ navigation, route }) {
 				<ScrollView>
 					<View style={styles.imageWholeContainer}>
 						<View style={styles.imageContainer}>
-							<Image source={route.params.img} style={styles.image} />
+							<Image source={{ uri: route.params.img }} style={styles.image} />
 						</View>
 					</View>
 					<View style={styles.detailsContainer}>
@@ -72,7 +100,7 @@ const styles = StyleSheet.create({
 		fontFamily: "MontserratSemiBold",
 		fontSize: 35,
 		marginTop: "2%",
-		textAlign : 'center'
+		textAlign: "center",
 	},
 	imageContainer: {
 		height: (deviceWidth / 2 - 30) * (4 / 3),

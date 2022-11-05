@@ -8,7 +8,8 @@ function ProductView(props) {
 	return (
 		<View style={styles.container}>
 			<Pressable onPress = {props.onNavigate}>
-				<Image source={props.img} style={styles.image} />
+				{console.log(props.img)}
+				<Image source={{uri : props.img}} style={styles.image} />
 			</Pressable>
 		</View>
 	);

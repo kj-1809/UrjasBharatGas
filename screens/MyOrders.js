@@ -1,56 +1,62 @@
 import { Text, View, StyleSheet, FlatList } from "react-native";
-import ListItem from "../components/ListItem"; 
-const OrdersList = [
-	{
-		orderId: 1,
-		itemName: "19KG Cylinder",
-		price: 2000,
-		quantity: 12,
-	},
-	{
-		orderId: 2,
-		itemName: "19KG Cylinder",
-		price: 2000,
-		quantity: 11,
-	},
-	{
-		orderId: 3,
-		itemName: "19KG Cylinder",
-		price: 2000,
-		quantity: 112,
-	},
-	{
-		orderId: 4,
-		itemName: "19KG Cylinder",
-		price: 2000,
-		quantity: 2,
-	},
-	{
-		orderId: 5,
-		itemName: "47Kg Cyclinder",
-		price: 5000,
-		quantity: 12,
-	},
-	{
-		orderId: 6,
-		itemName: "19KG Cylinder",
-		price: 2000,
-		quantity: 1,
-	},
-];
+import ListItem from "../components/ListItem";
+
+import {
+	collection,
+	query,
+	where,
+	getDocs,
+	doc,
+	limit,
+	orderBy,
+} from "firebase/firestore";
+import { db, auth } from "../firebase";
+import { useState, useEffect } from "react";
+import LoadingView from "../components/LoadingView";
 
 function MyOrders() {
+	const [orders, setOrders] = useState([]);
+	const currentUser = auth.currentUser;
+	console.log(currentUser.uid);
+
+	const q = query(
+		collection(db, "orders"),
+		where("uid", "==", currentUser.uid),
+		orderBy("orderId", "desc")
+	);
+
+	async function getDataFromFirebase(queryData) {
+		const querySnapshot = await getDocs(queryData);
+		const arr = [];
+		querySnapshot.forEach((doc) => {
+			arr.push(doc.data());
+		});
+		if (arr.length == 0) {
+			arr.push(1);
+		}
+		setOrders(arr);
+	}
+	useEffect(() => {
+		getDataFromFirebase(q);
+	}, []);
+
+	console.log(orders);
+
+	if (!orders[0] == 1) {
+		return <LoadingView message="fetching data.." />;
+	}
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.headingStyle}>My Orders</Text>
 			<View style={styles.listContainer}>
 				<FlatList
-					data={OrdersList}
+					data={orders}
 					renderItem={({ item }) => {
 						return (
 							<ListItem
 								orderId={item.orderId}
-								itemName={item.itemName}
+								itemName={item.productName}
 								price={item.price}
 								quantity={item.quantity}
 							/>

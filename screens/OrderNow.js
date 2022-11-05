@@ -1,97 +1,125 @@
 import { Text, View, StyleSheet, Image, FlatList } from "react-native";
 import ProductView from "../components/ProductView";
+import { useEffect, useState } from "react";
+import { collection, query, where, getDocs, doc } from "firebase/firestore";
+import { db, auth } from "../firebase";
 
+import LoadingView from "../components/LoadingView";
 
-const Products = [
-  {
-    productId : 1,
-    productName : "Shoe UK 10",
-    price : 7999,
-    img : require("../assets/images/shoesImg.jpg")
-  },
-  {
-    productId : 2,
-    productName : "Shoe US 10",
-    price : 79999,
-    img : require("../assets/images/newimg.jpg")
-  },
-  {
-    productId : 3,
-    productName : "Shoe US 10",
-    price : 79999,
-    img : require("../assets/images/newimg.jpg")
-  },
-  {
-    productId : 4,
-    productName : "Shoe US 10",
-    price : 79999,
-    img : require("../assets/images/shoesImg.jpg")
-  },
-  {
-    productId : 5,
-    productName : "Shoe US 10",
-    price : 79999,
-    img : require("../assets/images/shoesImg.jpg")
-  },
-  {
-    productId : 6,
-    productName : "Shoe US 10",
-    price : 79999,
-    img : require("../assets/images/newimg.jpg")
-  },
-]
-
+// const Products = [
+//   {
+//     productId : 1,
+//     productName : "Shoe UK 10",
+//     price : 7999,
+//     img : require("../assets/images/shoesImg.jpg")
+//   },
+//   {
+//     productId : 2,
+//     productName : "Shoe US 10",
+//     price : 79999,
+//     img : require("../assets/images/newimg.jpg")
+//   },
+//   {
+//     productId : 3,
+//     productName : "Shoe US 10",
+//     price : 79999,
+//     img : require("../assets/images/newimg.jpg")
+//   },
+//   {
+//     productId : 4,
+//     productName : "Shoe US 10",
+//     price : 79999,
+//     img : require("../assets/images/shoesImg.jpg")
+//   },
+//   {
+//     productId : 5,
+//     productName : "Shoe US 10",
+//     price : 79999,
+//     img : require("../assets/images/shoesImg.jpg")
+//   },
+//   {
+//     productId : 6,
+//     productName : "Shoe US 10",
+//     price : 79999,
+//     img : require("../assets/images/newimg.jpg")
+//   },
+// ]
 
 function OrderNow(props) {
+	const [products, setProducts] = useState([]);
 
-  function navigateToSummary(item){
-    
-    const data = {
-      productId : item.productId,
-      productName : item.productName,
-      price : item.price,
-      img : item.img,
-    }
-    props.navigation.navigate('OrderSummary' , data);
-  }
+	async function getProductsFromDatabase() {
+		const querySnapshot = await getDocs(collection(db, "products"));
+		const arr = [];
+		querySnapshot.forEach((doc) => {
+			arr.push(doc.data());
+		});
+		setProducts(arr);
+	}
+
+	useEffect(() => {
+		console.log("triggered");
+		getProductsFromDatabase();
+	}, []);
+
+	console.log(products);
+
+	if (products.length == 0) {
+		return <LoadingView message="loading.." />;
+	}
+
+	function navigateToSummary(item) {
+		const data = {
+			productId: item.productId,
+			productName: item.productName,
+			price: item.price,
+			img: item.img,
+		};
+		props.navigation.navigate("OrderSummary", data);
+	}
 
 	return (
-		<View style = {styles.container}>
-			<Text style = {styles.headingText}>Order Now</Text>
-			<Text style = {styles.headingSubText}>Select a product to order</Text>
-      <View style = {styles.productsContainer}>
-        <FlatList numColumns={2} 
-        data = {Products}
-        renderItem = {(item) => {
-          return (<ProductView img = {item.item.img} onNavigate = {navigateToSummary.bind(this,item.item)}/>)
-        }}
-        keyExtractor = {(item) => item.productId}
-        />
-      </View>
+		<View style={styles.container}>
+			<Text style={styles.headingText}>Order Now</Text>
+			<Text style={styles.headingSubText}>Select a product to order</Text>
+			<View style={styles.productsContainer}>
+				<FlatList
+					numColumns={2}
+					data={products}
+					renderItem={(item) => {
+						return (
+							<ProductView
+								img={item.item.img}
+								onNavigate={navigateToSummary.bind(this, item.item)}
+							/>
+						);
+					}}
+					keyExtractor={(item) => item.productId}
+				/>
+			</View>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-  container : {
-    flex : 1,
-    alignItems : 'center'
-  },
-  headingText : {
-    fontFamily : "MontserratSemiBold",
-    fontSize : 45
-  },
-  headingSubText : {
-    fontFamily : "MontserratSemiBold",
-    fontSize : 18 , 
-    opacity : 0.5,
-    marginTop : "2%"
-  },
-  productsContainer : {
-    marginTop : "10%",
-    paddingBottom : "25%"
-  }
-})
-
+	container: {
+		flex: 1,
+		alignItems: "center",
+	},
+	headingText: {
+		fontFamily: "MontserratSemiBold",
+		fontSize: 45,
+	},
+	headingSubText: {
+		fontFamily: "MontserratSemiBold",
+		fontSize: 18,
+		opacity: 0.5,
+		marginTop: "2%",
+	},
+	productsContainer: {
+		marginTop: "10%",
+		paddingBottom: "25%",
+	},
+});
 
 export default OrderNow;

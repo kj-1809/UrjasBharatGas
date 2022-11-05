@@ -10,6 +10,7 @@ function InputWithText(props) {
 					value={props.value}
 					editable={props.editable}
 					style={styles.inputStyle}
+					onChangeText = {props.onTextChange}
 				/>
 			</View>
 		</View>

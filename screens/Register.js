@@ -70,10 +70,10 @@ function Register(props) {
 				name: name,
 				address: address,
 				gstin: gstin,
-				disc5: "0",
-				disc19: "0",
-				disc47: "0",
-				disc430: "0",
+				disc5: 0,
+				disc19: 0,
+				disc47: 0,
+				disc430: 0,
 				email : email,
 			});
 			console.log("Document written with ID: ", docRef.id);
