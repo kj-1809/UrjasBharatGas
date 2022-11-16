@@ -4,13 +4,9 @@ import { useState } from "react";
 import { collection, query, where, getDocs, doc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import LoadingView from "../components/LoadingView";
-import Loading from "../components/Loading";
-import SuccessAnimation from "../components/SuccessAnimation";
-import LottieView from "lottie-react-native";
 function Homepage({ navigation }) {
 	const [name, setName] = useState("");
 	const currentUser = auth.currentUser;
-	const [animate, setAnimate] = useState(true);
 	const q = query(collection(db, "users"), where("uid", "==", currentUser.uid));
 	async function getDataFromFirebase(queryData) {
 		const querySnapshot = await getDocs(queryData);
@@ -23,10 +19,6 @@ function Homepage({ navigation }) {
 	if (name.length == 0) {
 		return <LoadingView message="loading.." />;
 	}
-	if (animate) {
-		return <LottieView source = {require("../assets/successLottie.json")} autoplay/>
-	}
-
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -109,6 +101,6 @@ const styles = StyleSheet.create({
 	buttonHorizontalContainer: {
 		flexDirection: "row",
 		marginVertical: "3%",
-	},
+	}
 });
 export default Homepage;

@@ -1,22 +1,26 @@
-import { View, StyleSheet } from "react-native";
-import Lottie from "lottie-react-native";
+import { View, Image, StyleSheet } from "react-native";
 
 function SuccessAnimation() {
 	return (
-		<View style={[StyleSheet.absoluteFillObject, styles.container]}>
-			<Lottie source={require("../assets/successLottie.json")} autoPlay />
+		<View style={styles.gifContainer}>
+			<Image
+				source={require("../assets/success.gif")}
+				style={styles.animatedObject}
+			/>
 		</View>
 	);
 }
 
+export default SuccessAnimation;
+
 const styles = StyleSheet.create({
-	container: {
-		position: "relative",
-		justifyContent: "center",
+	animatedObject: {
+		width: 200,
+		height: 200,
+	},
+	gifContainer: {
+		flex: 1,
 		alignItems: "center",
-		backgroundColor: (0, 0, 0, 0.2),
-		zIndex: 1,
+		justifyContent: "center",
 	},
 });
-
-export default SuccessAnimation;

@@ -14,13 +14,14 @@ import NextButton from "../components/NextButton";
 const deviceWidth = Dimensions.get("screen").width;
 import { auth, db } from "../firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
-import LoadingView from "../components/LoadingView"
-import SuccessAnimation from "../components/SuccessAnimation"
+import LoadingView from "../components/LoadingView";
+import SuccessAnimation from "../components/SuccessAnimation";
 
 function OrderSummary({ navigation, route }) {
 	const [quantity, setQuantity] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const currentUser = auth.currentUser;
+	const [animate, setAnimate] = useState(false);
 
 	async function uploadDataToFirebase() {
 		const querySnapshot = await getDocs(collection(db, "orders"));
@@ -33,19 +34,25 @@ function OrderSummary({ navigation, route }) {
 			quantity: quantity,
 			uid: currentUser.uid,
 		});
-		// setLoading(false);
 	}
 
 	function handleSubmit() {
 		setLoading(true);
 		uploadDataToFirebase();
 		setLoading(false);
-		navigation.navigate("Homepage");
-		Alert.alert("Success", "Your order was placed successfully !");
+		setAnimate(true);
+		setTimeout(() => {
+			setAnimate(false);
+			navigation.navigate("Homepage");
+			Alert.alert("Success" , "Order Placed Successfully !")
+		}, 2500);
 	}
 
 	if (loading) {
 		return <LoadingView message="Loading..." />;
+	}
+	if (animate) {
+		return <SuccessAnimation />;
 	}
 
 	return (
