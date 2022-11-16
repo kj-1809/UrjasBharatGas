@@ -2,23 +2,31 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import CustomButton from "../components/CustomButton";
 import { useState } from "react";
 import { collection, query, where, getDocs, doc } from "firebase/firestore";
-import { db,auth } from "../firebase";
-import LoadingView from "../components/LoadingView"
+import { db, auth } from "../firebase";
+import LoadingView from "../components/LoadingView";
+import Loading from "../components/Loading";
+import SuccessAnimation from "../components/SuccessAnimation";
+import LottieView from "lottie-react-native";
 function Homepage({ navigation }) {
-	const [name , setName] = useState("")
+	const [name, setName] = useState("");
 	const currentUser = auth.currentUser;
+	const [animate, setAnimate] = useState(true);
 	const q = query(collection(db, "users"), where("uid", "==", currentUser.uid));
-	async function getDataFromFirebase(queryData){
+	async function getDataFromFirebase(queryData) {
 		const querySnapshot = await getDocs(queryData);
 		querySnapshot.forEach((doc) => {
-			setName(doc.data().name)
-		})
+			setName(doc.data().name);
+		});
 	}
-	getDataFromFirebase(q)
-		
-	if(name.length == 0){
-		return (<LoadingView message = "loading.."/>)
+	getDataFromFirebase(q);
+
+	if (name.length == 0) {
+		return <LoadingView message="loading.." />;
 	}
+	if (animate) {
+		return <LottieView source = {require("../assets/successLottie.json")} autoplay/>
+	}
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>

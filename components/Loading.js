@@ -1,10 +1,10 @@
 import { View ,StyleSheet} from "react-native";
 import LottieView from "lottie-react-native";
 
-function Loading() {
+function Loading(props) {
 	return (
 		<View style = {[StyleSheet.absoluteFillObject,styles.container]}>
-			<LottieView source={require("../assets/loading.json")} autoPlay loop />
+			<LottieView source={require("../assets/successLottie.json")} autoPlay/>
 		</View>
 	);
 }
