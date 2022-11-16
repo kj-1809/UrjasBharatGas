@@ -13,6 +13,7 @@ import {
 import { db, auth } from "../firebase";
 import { useState, useEffect } from "react";
 import LoadingView from "../components/LoadingView";
+import Loading from "../components/Loading"
 
 function MyOrders() {
 	const [orders, setOrders] = useState([]);
@@ -44,6 +45,7 @@ function MyOrders() {
 
 	if (!orders[0] == 1) {
 		return <LoadingView message="fetching data.." />;
+		// return <Loading />;
 	}
 
 	return (

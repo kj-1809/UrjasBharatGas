@@ -7,15 +7,14 @@ import {
 	ScrollView,
 	KeyboardAvoidingView,
 	Pressable,
-	Alert
+	Alert,
 } from "react-native";
 import NextButton from "../components/NextButton";
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useContext, useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import LoadingView from "../components/LoadingView"
-
+import LoadingView from "../components/LoadingView";
 
 function Register(props) {
 	const [email, setEmail] = useState("");
@@ -24,20 +23,21 @@ function Register(props) {
 	const [name, setName] = useState("");
 	const [address, setAddress] = useState("");
 	const [gstin, setGstin] = useState("");
-	const [registerPending , setRegisterPending] = useState(false);
-	
+	const [registerPending, setRegisterPending] = useState(false);
+	const [phone, setPhone] = useState();
+
 	function handleSubmit() {
 		//Create a new user
 		setRegisterPending(true);
-		if(password != confirmPassword){
-			Alert.alert("Error" , "Password do not match !")
-			setRegisterPending(false)
-			return
+		if (password != confirmPassword) {
+			Alert.alert("Error", "Password do not match !");
+			setRegisterPending(false);
+			return;
 		}
-		if(password.length < 6){
-			Alert.alert("Error" , "Password length should be greater than 6 !")
-			setRegisterPending(false)
-			return
+		if (password.length < 6) {
+			Alert.alert("Error", "Password length should be greater than 6 !");
+			setRegisterPending(false);
+			return;
 		}
 		createUserWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
@@ -49,18 +49,18 @@ function Register(props) {
 				uploadUserData(user.uid);
 				// navigate to homescreen
 				setRegisterPending(false);
-				props.onSuccess()
+				props.onSuccess();
 			})
 			.catch((error) => {
 				console.log(error.code);
 				console.log(error.message);
 				setRegisterPending(false);
-				Alert.alert("Error" , error.message);
+				Alert.alert("Error", error.message);
 			});
 	}
 
-	if(registerPending){
-		return <LoadingView message = "Registering User"/>
+	if (registerPending) {
+		return <LoadingView message="Registering User" />;
 	}
 
 	async function uploadUserData(uid) {
@@ -74,7 +74,9 @@ function Register(props) {
 				disc19: 0,
 				disc47: 0,
 				disc430: 0,
-				email : email,
+				email: email,
+				phone: phone,
+				isAdmin: false,
 			});
 			console.log("Document written with ID: ", docRef.id);
 		} catch (e) {
@@ -95,10 +97,7 @@ function Register(props) {
 			<Text style={styles.loginText}>Register</Text>
 			<Text style={styles.loginText2}>Please sign up to continue</Text>
 
-			<KeyboardAvoidingView
-				style={styles.scrollViewStyle}
-				behavior="padding"
-			>
+			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior="padding">
 				<ScrollView>
 					<View style={styles.inputContainer}>
 						<View style={styles.inputView}>
@@ -139,6 +138,15 @@ function Register(props) {
 								autoCorrect={false}
 								onChangeText={setConfirmPassword}
 								value={confirmPassword}
+							/>
+						</View>
+						<View style={styles.inputView}>
+							<TextInput
+								placeholder="Phone"
+								style={styles.inputText}
+								onChangeText={setPhone}
+								value={phone}
+								keyboardType = "number-pad"
 							/>
 						</View>
 						<View style={styles.inputView}>
@@ -214,8 +222,8 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		fontFamily: "MontserratSemiBold",
 		// backgroundColor : "#F6F6C9",
-		paddingHorizontal : 12,
-		paddingVertical : 12
+		paddingHorizontal: 12,
+		paddingVertical: 12,
 	},
 	backgroundContainer: {
 		position: "absolute",

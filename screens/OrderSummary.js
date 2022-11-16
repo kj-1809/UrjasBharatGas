@@ -15,6 +15,7 @@ const deviceWidth = Dimensions.get("screen").width;
 import { auth, db } from "../firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import LoadingView from "../components/LoadingView"
+import SuccessAnimation from "../components/SuccessAnimation"
 
 function OrderSummary({ navigation, route }) {
 	const [quantity, setQuantity] = useState(1);
@@ -24,7 +25,6 @@ function OrderSummary({ navigation, route }) {
 	async function uploadDataToFirebase() {
 		const querySnapshot = await getDocs(collection(db, "orders"));
 		console.log(querySnapshot.size);
-
 		const docRef = await addDoc(collection(db, "orders"), {
 			orderId: querySnapshot.size + 1,
 			price: route.params.price,
@@ -33,6 +33,7 @@ function OrderSummary({ navigation, route }) {
 			quantity: quantity,
 			uid: currentUser.uid,
 		});
+		// setLoading(false);
 	}
 
 	function handleSubmit() {

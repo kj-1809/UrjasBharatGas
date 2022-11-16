@@ -7,7 +7,6 @@ import LoadingView from "../components/LoadingView"
 function Homepage({ navigation }) {
 	const [name , setName] = useState("")
 	const currentUser = auth.currentUser;
-
 	const q = query(collection(db, "users"), where("uid", "==", currentUser.uid));
 	async function getDataFromFirebase(queryData){
 		const querySnapshot = await getDocs(queryData);
@@ -20,7 +19,6 @@ function Homepage({ navigation }) {
 	if(name.length == 0){
 		return (<LoadingView message = "loading.."/>)
 	}
-	
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>

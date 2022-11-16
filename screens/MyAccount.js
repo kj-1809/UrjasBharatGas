@@ -25,6 +25,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 function MyAccount({ navigation }) {
 	const [address, setAddress] = useState("");
 	const [gstin, setGstin] = useState("");
+	const [phone, setPhone] = useState("");
 	const [uploadPending, setUploadPending] = useState(false);
 	const [docId, setDocId] = useState();
 
@@ -40,6 +41,7 @@ function MyAccount({ navigation }) {
 			setDocId(doc.id);
 			setAddress(doc.data().address);
 			setGstin(doc.data().gstin);
+			setPhone(doc.data().phone)
 		});
 	}
 
@@ -69,6 +71,7 @@ function MyAccount({ navigation }) {
 		await updateDoc(doc(db, "users", docId), {
 			address: address,
 			gstin: gstin,
+			phone : phone,
 		});
 		console.log("Submitted successfully !");
 		setUploadPending(false);
@@ -107,6 +110,12 @@ function MyAccount({ navigation }) {
 							placeholder={userData && userData.email}
 							title="Email"
 							editable={false}
+						/>
+						<InputWithText
+							placeholder={userData && userData.phone}
+							title="Phone"
+							onTextChange = {setPhone}
+							value = {phone}
 						/>
 						<InputWithText
 							placeholder={userData && userData.address}
