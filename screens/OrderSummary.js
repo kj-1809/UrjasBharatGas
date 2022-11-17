@@ -33,6 +33,7 @@ function OrderSummary({ navigation, route }) {
 			productName: route.params.productName,
 			quantity: quantity,
 			uid: currentUser.uid,
+			isFulfilled : false
 		});
 	}
 
