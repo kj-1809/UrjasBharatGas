@@ -13,7 +13,7 @@ import {
 import NextButton from "../components/NextButton";
 const deviceWidth = Dimensions.get("screen").width;
 import { auth, db } from "../firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs , serverTimestamp} from "firebase/firestore";
 import LoadingView from "../components/LoadingView";
 import SuccessAnimation from "../components/SuccessAnimation";
 
@@ -33,7 +33,8 @@ function OrderSummary({ navigation, route }) {
 			productName: route.params.productName,
 			quantity: quantity,
 			uid: currentUser.uid,
-			isFulfilled : false
+			orderStatus : "Pending",
+			createdAt : serverTimestamp()
 		});
 	}
 
