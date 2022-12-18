@@ -4,18 +4,22 @@ function ListItem(props) {
 	return (
     <View style = {styles.itemContainer}>
       <View style = {styles.keyContainer}>
+        <Text style = {styles.textStyle}>Date</Text>
         <Text style = {styles.textStyle}>Order ID</Text>
         <Text style = {styles.textStyle}>Item Name</Text>
         <Text style = {styles.textStyle}>Price</Text>
         <Text style = {styles.textStyle}>Quantity</Text>
         <Text style = {styles.textStyle}>Total</Text>
+        <Text style = {styles.textStyle}>Status</Text>
       </View>
       <View style = {styles.valueContainer}>
+        <Text style = {styles.textStyle}>:  {props.createdAt}</Text>
         <Text style = {styles.textStyle}>:  {props.orderId}</Text>
         <Text style = {styles.textStyle}>:  {props.itemName}</Text>
         <Text style = {styles.textStyle}>:  {props.price}</Text>
         <Text style = {styles.textStyle}>:  {props.quantity}</Text>
         <Text style = {styles.textStyle}>:  {props.quantity * props.price}</Text>
+        <Text style = {styles.textStyle}>:  {props.orderStatus}</Text>
       </View>
     </View>
 

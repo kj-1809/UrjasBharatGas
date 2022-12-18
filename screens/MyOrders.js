@@ -13,7 +13,7 @@ import {
 import { db, auth } from "../firebase";
 import { useState, useEffect } from "react";
 import LoadingView from "../components/LoadingView";
-import Loading from "../components/Loading"
+import Loading from "../components/Loading";
 
 function MyOrders() {
 	const [orders, setOrders] = useState([]);
@@ -28,15 +28,31 @@ function MyOrders() {
 
 	async function getDataFromFirebase(queryData) {
 		const querySnapshot = await getDocs(queryData);
-		const arr = [];
+		let arr = [];
 		querySnapshot.forEach((doc) => {
-			arr.push(doc.data());
+			let newObj = {};
+			for (let key in doc.data()) {
+				if (key == "createdAt") {
+					// const newTime = new Date(doc.data()[key].seconds * 1000)
+					// console.log(newTIme)
+
+					newObj.createdAt = doc.data()[key].seconds;
+					const testt = new Date(doc.data()[key].seconds * 1000);
+					const newTest = testt.toLocaleDateString();
+					console.log(newTest);
+					newObj.createdAt = newTest;
+				} else {
+					newObj[key] = doc.data()[key];
+				}
+			}
+			arr.push(newObj);
 		});
 		if (arr.length == 0) {
 			arr.push(1);
 		}
 		setOrders(arr);
 	}
+
 	useEffect(() => {
 		getDataFromFirebase(q);
 	}, []);
@@ -61,6 +77,8 @@ function MyOrders() {
 								itemName={item.productName}
 								price={item.price}
 								quantity={item.quantity}
+								createdAt={item.createdAt}
+								orderStatus={item.orderStatus}
 							/>
 						);
 					}}

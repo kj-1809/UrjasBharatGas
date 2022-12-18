@@ -6,45 +6,6 @@ import { db, auth } from "../firebase";
 
 import LoadingView from "../components/LoadingView";
 
-// const Products = [
-//   {
-//     productId : 1,
-//     productName : "Shoe UK 10",
-//     price : 7999,
-//     img : require("../assets/images/shoesImg.jpg")
-//   },
-//   {
-//     productId : 2,
-//     productName : "Shoe US 10",
-//     price : 79999,
-//     img : require("../assets/images/newimg.jpg")
-//   },
-//   {
-//     productId : 3,
-//     productName : "Shoe US 10",
-//     price : 79999,
-//     img : require("../assets/images/newimg.jpg")
-//   },
-//   {
-//     productId : 4,
-//     productName : "Shoe US 10",
-//     price : 79999,
-//     img : require("../assets/images/shoesImg.jpg")
-//   },
-//   {
-//     productId : 5,
-//     productName : "Shoe US 10",
-//     price : 79999,
-//     img : require("../assets/images/shoesImg.jpg")
-//   },
-//   {
-//     productId : 6,
-//     productName : "Shoe US 10",
-//     price : 79999,
-//     img : require("../assets/images/newimg.jpg")
-//   },
-// ]
-
 function OrderNow(props) {
 	const [products, setProducts] = useState([]);
 
