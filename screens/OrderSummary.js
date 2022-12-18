@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -13,7 +13,14 @@ import {
 import NextButton from "../components/NextButton";
 const deviceWidth = Dimensions.get("screen").width;
 import { auth, db } from "../firebase";
-import { collection, addDoc, getDocs , serverTimestamp} from "firebase/firestore";
+import {
+	collection,
+	addDoc,
+	getDocs,
+	serverTimestamp,
+	where,
+	query,
+} from "firebase/firestore";
 import LoadingView from "../components/LoadingView";
 import SuccessAnimation from "../components/SuccessAnimation";
 
@@ -22,19 +29,56 @@ function OrderSummary({ navigation, route }) {
 	const [loading, setLoading] = useState(false);
 	const currentUser = auth.currentUser;
 	const [animate, setAnimate] = useState(false);
+	const [additionalDiscount, setAdditionalDiscount] = useState(0);
+	const [userData, setUserData] = useState({});
+	const [fetchingData, setFetchingData] = useState(false);
+
+	async function getUserData() {
+		setFetchingData(true);
+		const q = query(
+			collection(db, "users"),
+			where("uid", "==", currentUser.uid)
+		);
+		const querySnapshot = await getDocs(q);
+		let temp = {};
+		querySnapshot.forEach((doc) => {
+			temp = doc.data();
+			console.log(doc.data());
+		});
+		setUserData(temp);
+		setFetchingData(false);
+	}
+
+	useEffect(() => {
+		getUserData();
+	}, []);
+
+	useEffect(() => {
+		if (route.params.productId == 1) {
+			setAdditionalDiscount(Number(userData.disc5));
+		} else if (route.params.productId == 2) {
+			setAdditionalDiscount(Number(userData.disc19));
+		} else if (route.params.productId == 3) {
+			setAdditionalDiscount(Number(userData.disc47));
+		} else if (route.params.productId == 4) {
+			setAdditionalDiscount(Number(userData.disc430));
+		} else {
+			setAdditionalDiscount(0);
+		}
+	}, [userData]);
 
 	async function uploadDataToFirebase() {
 		const querySnapshot = await getDocs(collection(db, "orders"));
 		console.log(querySnapshot.size);
 		const docRef = await addDoc(collection(db, "orders"), {
 			orderId: querySnapshot.size + 1,
-			price: route.params.price,
+			price: route.params.price - route.params.discount - additionalDiscount,
 			productId: route.params.productId,
 			productName: route.params.productName,
 			quantity: quantity,
 			uid: currentUser.uid,
-			orderStatus : "Pending",
-			createdAt : serverTimestamp()
+			orderStatus: "Pending",
+			createdAt: serverTimestamp(),
 		});
 	}
 
@@ -46,7 +90,7 @@ function OrderSummary({ navigation, route }) {
 		setTimeout(() => {
 			setAnimate(false);
 			navigation.navigate("Homepage");
-			Alert.alert("Success" , "Order Placed Successfully !")
+			Alert.alert("Success", "Order Placed Successfully !");
 		}, 2500);
 	}
 
@@ -55,6 +99,10 @@ function OrderSummary({ navigation, route }) {
 	}
 	if (animate) {
 		return <SuccessAnimation />;
+	}
+
+	if (fetchingData) {
+		return <LoadingView message="Loading..." />;
 	}
 
 	return (
@@ -68,7 +116,10 @@ function OrderSummary({ navigation, route }) {
 						</View>
 					</View>
 					<View style={styles.detailsContainer}>
-						<Text style={styles.priceText}>Rs. {route.params.price}</Text>
+						<Text style={styles.priceText}>
+							Rs.{" "}
+							{route.params.price - route.params.discount - additionalDiscount}
+						</Text>
 						<Text style={styles.detailsText}>{route.params.productName}</Text>
 					</View>
 					<View style={styles.inputWholeContainer}>
@@ -85,8 +136,13 @@ function OrderSummary({ navigation, route }) {
 					<View style={styles.totalContainer}>
 						<Text style={styles.totalText}>Quantity : {quantity}</Text>
 						<Text style={styles.totalText}>
-							Total : {route.params.price} x {quantity} ={" "}
-							{route.params.price * quantity}
+							Total :{" "}
+							{route.params.price - route.params.discount - additionalDiscount}{" "}
+							x {quantity} ={" "}
+							{(route.params.price -
+								route.params.discount -
+								additionalDiscount) *
+								quantity}
 						</Text>
 					</View>
 					<View style={styles.submitContainer}>

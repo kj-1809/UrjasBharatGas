@@ -35,6 +35,7 @@ function OrderNow(props) {
 			productName: item.productName,
 			price: item.price,
 			img: item.img,
+			discount : item.discount,
 		};
 		props.navigation.navigate("OrderSummary", data);
 	}
