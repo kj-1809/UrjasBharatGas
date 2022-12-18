@@ -35,12 +35,13 @@ function MyOrders() {
 				if (key == "createdAt") {
 					// const newTime = new Date(doc.data()[key].seconds * 1000)
 					// console.log(newTIme)
-
-					newObj.createdAt = doc.data()[key].seconds;
-					const testt = new Date(doc.data()[key].seconds * 1000);
-					const newTest = testt.toLocaleDateString();
-					console.log(newTest);
-					newObj.createdAt = newTest;
+					const options = {
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+					};
+					const orderDate = new Date(doc.data()[key].seconds * 1000);
+					newObj.createdAt = orderDate.toLocaleDateString("en-GB", options);
 				} else {
 					newObj[key] = doc.data()[key];
 				}
