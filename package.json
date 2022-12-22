@@ -12,6 +12,7 @@
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
+    "axios": "^1.2.1",
     "expo": "~46.0.16",
     "expo-app-loading": "~2.1.0",
     "expo-font": "~10.2.0",
@@ -23,7 +24,8 @@
     "react-native-screens": "~3.15.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "react-native-dotenv": "^3.4.6"
   },
   "private": true
 }

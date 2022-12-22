@@ -4,14 +4,12 @@ const deviceWidth = Dimensions.get("screen").width;
 const imgName = "shoesImg.jpg";
 
 function ProductView(props) {
-
 	return (
-		<View style={styles.container}>
-			<Pressable onPress = {props.onNavigate}>
-				{console.log(props.img)}
-				<Image source={{uri : props.img}} style={styles.image} />
-			</Pressable>
-		</View>
+		<Pressable onPress={props.onNavigate}>
+			<View style={styles.container}>
+				{props.img ? <Image source={{ uri: props.img }} style={styles.image} /> : null}
+			</View>
+		</Pressable>
 	);
 }
 

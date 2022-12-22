@@ -83,7 +83,7 @@ function Login(props) {
 			</View>
 			<Text style={styles.loginText}>Login</Text>
 			<Text style={styles.loginText2}>Please sign in to continue</Text>
-			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior="padding">
+			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior={Platform.OS === "ios" ? "padding" : "height"}>
 				<ScrollView>
 					<View style={styles.inputContainer}>
 						<View style={styles.inputView}>
