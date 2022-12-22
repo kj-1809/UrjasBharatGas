@@ -103,9 +103,6 @@ function OrderSummary({ navigation, route }) {
 				navigation.navigate("Homepage");
 				// Alert.alert("Success", "Order Placed Successfully !");
 			}, 2500);
-			console.log("TYPE OF RESPONSE : " , typeof res)
-			console.log("RESPONSE : " , res)
-			console.log("phone : " , userPhoneNumber)
 			const options = {
 				method: "POST",
 				url: `https://graph.facebook.com/v15.0/${SENDER_NUMBER}/messages/`,
