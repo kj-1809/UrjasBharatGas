@@ -25,9 +25,7 @@ import {
 import LoadingView from "../components/LoadingView";
 import SuccessAnimation from "../components/SuccessAnimation";
 import axios from "axios";
-import {WHATSAPP_API_KEY,SENDER_NUMBER} from "@env";
-
-
+import { WHATSAPP_API_KEY, SENDER_NUMBER } from "@env";
 
 function OrderSummary({ navigation, route }) {
 	const [quantity, setQuantity] = useState(1);
@@ -37,7 +35,7 @@ function OrderSummary({ navigation, route }) {
 	const [additionalDiscount, setAdditionalDiscount] = useState(0);
 	const [userData, setUserData] = useState({});
 	const [fetchingData, setFetchingData] = useState(false);
-	const [userPhoneNumber , setUserPhoneNumber] = useState('');
+	const [userPhoneNumber, setUserPhoneNumber] = useState("");
 
 	async function getUserData() {
 		setFetchingData(true);
@@ -71,9 +69,8 @@ function OrderSummary({ navigation, route }) {
 		} else {
 			setAdditionalDiscount(0);
 		}
-		setUserPhoneNumber(userData.phone)
+		setUserPhoneNumber(userData.phone);
 	}, [userData]);
-
 
 	async function uploadDataToFirebase() {
 		const querySnapshot = await getDocs(collection(db, "orders"));
@@ -88,59 +85,64 @@ function OrderSummary({ navigation, route }) {
 			orderStatus: "Pending",
 			createdAt: serverTimestamp(),
 		});
-		console.log("TYPE OF DOC REF : " , typeof docRef);
-		console.log("DOC REF : " , docRef);
+		console.log("TYPE OF DOC REF : ", typeof docRef);
+		console.log("DOC REF : ", docRef);
 		return true;
 	}
 
 	function handleSubmit() {
 		setLoading(true);
-		uploadDataToFirebase().then((res) => {
-			setLoading(false);
-			setAnimate(true);
-			setTimeout(() => {
-				setAnimate(false);
-				navigation.navigate("Homepage");
-				// Alert.alert("Success", "Order Placed Successfully !");
-			}, 2500);
-			const options = {
-				method: "POST",
-				url: `https://graph.facebook.com/v15.0/${SENDER_NUMBER}/messages/`,
-				headers: {
-					Authorization:  `Bearer ${WHATSAPP_API_KEY}`,
-					"Content-Type": "application/json"
-				},
-				data: {
-					messaging_product: "whatsapp",
-					to: `91${userPhoneNumber}`,
-					type: "text",
-					text: {
-						preview_url: false,
-						body: "Your order was successfully placed ! Thanks for ordering with us !",
+		uploadDataToFirebase()
+			.then((res) => {
+				setLoading(false);
+				setAnimate(true);
+				setTimeout(() => {
+					setAnimate(false);
+					navigation.navigate("Homepage");
+					// Alert.alert("Success", "Order Placed Successfully !");
+				}, 2500);
+				const options = {
+					method: "POST",
+					url: `https://graph.facebook.com/v15.0/${SENDER_NUMBER}/messages/`,
+					headers: {
+						Authorization: `Bearer ${WHATSAPP_API_KEY}`,
+						"Content-Type": "application/json",
 					},
-				},
-			};
+					data: {
+						messaging_product: "whatsapp",
+						to: `91${userPhoneNumber}`,
+						type: "template",
+						template: {
+							name: "hello_world",
+							language: {
+								code: "en_US",
+							},
+						},
+					},
+				};
 
-			axios.request(options).then(function (response) {
-				console.log("Status : " , response.status)
-			}).catch(function (error) {
-				console.error(error);
+				axios
+					.request(options)
+					.then(function (response) {
+						console.log("Status : ", response.status);
+					})
+					.catch(function (error) {
+						console.error(error);
+					});
+			})
+			.catch((error) => {
+				Alert.alert("Error", "Please try again !");
 			});
-
-		}).catch(error => {
-			Alert.alert("Error" , "Please try again !")
-		});
 	}
 
-	
 	if (fetchingData) {
 		return <LoadingView message="Loading..." />;
 	}
 	if (animate) {
 		return <SuccessAnimation />;
 	}
-	if(loading){
-		return <LoadingView message = "Placing Order..." />
+	if (loading) {
+		return <LoadingView message="Placing Order..." />;
 	}
 
 	return (
@@ -150,8 +152,12 @@ function OrderSummary({ navigation, route }) {
 				<ScrollView>
 					<View style={styles.imageWholeContainer}>
 						<View style={styles.imageContainer}>
-							{route.params.img ? <Image source={{uri: route.params.img }} style={styles.image} /> : null}
-							
+							{route.params.img ? (
+								<Image
+									source={{ uri: route.params.img }}
+									style={styles.image}
+								/>
+							) : null}
 						</View>
 					</View>
 					<View style={styles.detailsContainer}>
@@ -225,7 +231,7 @@ const styles = StyleSheet.create({
 		borderRadius: 25,
 	},
 	priceText: {
-		marginTop : 20,
+		marginTop: 20,
 		fontFamily: "MontserratSemiBold",
 		fontSize: 28,
 		textAlign: "center",

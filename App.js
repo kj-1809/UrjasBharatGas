@@ -7,14 +7,13 @@ import OrderNow from "./screens/OrderNow";
 import MyOrders from "./screens/MyOrders";
 import MyAccount from "./screens/MyAccount";
 import AboutUs from "./screens/AboutUs";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Homepage from "./screens/Homepage";
 import OrderSummary from "./screens/OrderSummary";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-
 
 const Stack = createNativeStackNavigator();
 
@@ -69,7 +68,13 @@ function AuthenticatedStack() {
 						title: "",
 					}}
 				/>
-				<Stack.Screen name="AboutUs" component={AboutUs} />
+				<Stack.Screen
+					name="AboutUs"
+					component={AboutUs}
+					options={{
+						title: "",
+					}}
+				/>
 				<Stack.Screen
 					name="OrderSummary"
 					component={OrderSummary}
@@ -107,24 +112,24 @@ export default function App() {
 		);
 	}
 
-	
-
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			if (!user) {
 				setScreen(
-					<Login onSignUpPress={handleSignUpPress} onSuccess={handleAuthSuccess} />
+					<Login
+						onSignUpPress={handleSignUpPress}
+						onSuccess={handleAuthSuccess}
+					/>
 				);
 			}
 		});
-	} , [])
-
+	}, []);
 
 	if (!fontsLoaded) {
 		return null;
 	}
 
-	return(
+	return (
 		<>
 			<StatusBar style="dark" />
 			{screen}
