@@ -21,6 +21,9 @@ import {
 	where,
 	query,
 	setLogLevel,
+	updateDoc,
+	increment,
+	doc
 } from "firebase/firestore";
 import LoadingView from "../components/LoadingView";
 import SuccessAnimation from "../components/SuccessAnimation";
@@ -36,7 +39,7 @@ function OrderSummary({ navigation, route }) {
 	const [userData, setUserData] = useState({});
 	const [fetchingData, setFetchingData] = useState(false);
 	const [userPhoneNumber, setUserPhoneNumber] = useState("");
-
+	const [currentOrderNumber , setCurrentOrderNumber] = useState(0);
 	async function getUserData() {
 		setFetchingData(true);
 		const q = query(
@@ -50,11 +53,27 @@ function OrderSummary({ navigation, route }) {
 			console.log(doc.data());
 		});
 		setUserData(temp);
+		const val = await fetchCurrentOrderNumber();
 		setFetchingData(false);
+	}
+
+	async function fetchCurrentOrderNumber(){
+		const querySnapshot = await getDocs(collection(db, "ordernumber"));
+		querySnapshot.forEach((doc) => {
+			setCurrentOrderNumber(doc.data().curnum)
+		})
+	}
+
+	async function updateOrderNumber(){
+		const updatedSnap = await updateDoc(doc(db , "ordernumber" , "ie2fi9ZeUWWxhSQi4ssO") , {
+			curnum : increment(1)
+		})
+		console.log("Updated snap : " , updatedSnap)
 	}
 
 	useEffect(() => {
 		getUserData();
+		fetchCurrentOrderNumber();
 	}, []);
 
 	useEffect(() => {
@@ -72,11 +91,10 @@ function OrderSummary({ navigation, route }) {
 		setUserPhoneNumber(userData.phone);
 	}, [userData]);
 
+	
 	async function uploadDataToFirebase() {
-		const querySnapshot = await getDocs(collection(db, "orders"));
-		// console.log(querySnapshot.size);
 		const docRef = await addDoc(collection(db, "orders"), {
-			orderId: querySnapshot.size + 1,
+			orderId: currentOrderNumber,
 			price: route.params.price - route.params.discount - additionalDiscount,
 			productId: route.params.productId,
 			productName: route.params.productName,
@@ -85,9 +103,7 @@ function OrderSummary({ navigation, route }) {
 			orderStatus: "Pending",
 			createdAt: serverTimestamp(),
 		});
-		console.log("TYPE OF DOC REF : ", typeof docRef);
-		console.log("DOC REF : ", docRef);
-		return true;
+		updateOrderNumber()
 	}
 
 	function handleSubmit() {
@@ -99,32 +115,20 @@ function OrderSummary({ navigation, route }) {
 				setTimeout(() => {
 					setAnimate(false);
 					navigation.navigate("Homepage");
-					// Alert.alert("Success", "Order Placed Successfully !");
 				}, 2500);
+				
 				const options = {
 					method: "POST",
-					url: `https://graph.facebook.com/v15.0/${SENDER_NUMBER}/messages/`,
-					headers: {
-						Authorization: `Bearer ${WHATSAPP_API_KEY}`,
-						"Content-Type": "application/json",
-					},
-					data: {
-						messaging_product: "whatsapp",
-						to: `91${userPhoneNumber}`,
-						type: "template",
-						template: {
-							name: "hello_world",
-							language: {
-								code: "en_US",
-							},
-						},
-					},
+					url: `https://urja-proxy-api-production.up.railway.app/api/send/orderplaced`,
+					params : {
+						phone : userPhoneNumber
+					}
 				};
-
 				axios
 					.request(options)
 					.then(function (response) {
 						console.log("Status : ", response.status);
+						console.log("Message sent from the server!")
 					})
 					.catch(function (error) {
 						console.error(error);

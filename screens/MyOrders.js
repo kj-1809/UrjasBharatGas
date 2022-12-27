@@ -62,30 +62,31 @@ function MyOrders() {
 
 	if (!orders[0] == 1) {
 		return <LoadingView message="fetching data.." />;
-		// return <Loading />;
 	}
 
 	return (
 		<View style={styles.container}>
 			<Text style={styles.headingStyle}>My Orders</Text>
 			<View style={styles.listContainer}>
-				<FlatList
-					data={orders}
-					renderItem={({ item }) => {
-						return (
-							<ListItem
-								orderId={item.orderId}
-								itemName={item.productName}
-								price={item.price}
-								quantity={item.quantity}
-								createdAt={item.createdAt}
-								orderStatus={item.orderStatus}
-							/>
-						);
-					}}
-					keyExtractor={(item) => item.orderId}
-					style={styles.flatListStyle}
-				/>
+				{!(orders.length === 1 && orders[0] === 1) ? (
+					<FlatList
+						data={orders}
+						renderItem={({ item }) => {
+							return (
+								<ListItem
+									orderId={item.orderId}
+									itemName={item.productName}
+									price={item.price}
+									quantity={item.quantity}
+									createdAt={item.createdAt}
+									orderStatus={item.orderStatus}
+								/>
+							);
+						}}
+						keyExtractor={(item) => item.orderId}
+						style={styles.flatListStyle}
+					/>
+				) : null}
 			</View>
 		</View>
 	);
