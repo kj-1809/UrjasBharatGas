@@ -154,9 +154,10 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 15,
 		justifyContent: "center",
-		shadowColor: "black",
+		shadowColor: "#6CD2D9",
 		shadowOpacity: 0.4,
 		shadowOffset: { width: 5, height: 5 },
+		elevation : 20
 	},
 	inputText: {
 		fontSize: 15,

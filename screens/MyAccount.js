@@ -98,7 +98,7 @@ function MyAccount({ navigation }) {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.headingStyle}>My Account</Text>
-			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior="padding">
+			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior={Platform.OS === "ios" ? "padding" : "height"}>
 				<ScrollView>
 					<View style={styles.inputContainer}>
 						<InputWithText

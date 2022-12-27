@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 		shadowColor: "#6CD2D9",
 		shadowOpacity: 1,
 		shadowOffset: { width: 5, height: 5 },
+		elevation : 15
 	},
 	image: {
 		height: (deviceWidth / 2 - 30) * (4 / 3),

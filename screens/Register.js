@@ -97,7 +97,7 @@ function Register(props) {
 			<Text style={styles.loginText}>Register</Text>
 			<Text style={styles.loginText2}>Please sign up to continue</Text>
 
-			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior="padding">
+			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior={Platform.OS === "ios" ? "padding" : "height"}>
 				<ScrollView>
 					<View style={styles.inputContainer}>
 						<View style={styles.inputView}>
@@ -214,9 +214,11 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 		borderRadius: 15,
 		justifyContent: "center",
-		shadowColor: "black",
+		shadowColor: "#6CD2D9",
 		shadowOpacity: 0.4,
 		shadowOffset: { width: 5, height: 5 },
+		elevation : 8
+
 	},
 	inputText: {
 		fontSize: 15,

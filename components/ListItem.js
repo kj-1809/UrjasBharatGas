@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     margin : 10,
     shadowColor : '#6CD2D9',
     shadowOpacity : 1,
+    elevation : 5
 	},
 	textStyle: {
 		fontFamily: "MontserratSemiBold",

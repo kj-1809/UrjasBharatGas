@@ -34,13 +34,16 @@ const styles = StyleSheet.create({
 		// backgroundColor : 'blue',
 		shadowColor : '#6CD2D9',
 		shadowOpacity : 0.6,
+		// elevation : 5
 	},
 	inputStyle: {
 		backgroundColor : 'white',
 		height : 50,
 		borderRadius : 15,
 		padding : 10,
-		fontFamily : 'MontserratSemiBold'
+		fontFamily : 'MontserratSemiBold',
+		elevation : 5,
+		shadowColor : '#6CD2D9',
 	},
 });
 
