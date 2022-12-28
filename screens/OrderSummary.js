@@ -23,7 +23,7 @@ import {
 	setLogLevel,
 	updateDoc,
 	increment,
-	doc
+	doc,
 } from "firebase/firestore";
 import LoadingView from "../components/LoadingView";
 import SuccessAnimation from "../components/SuccessAnimation";
@@ -39,7 +39,7 @@ function OrderSummary({ navigation, route }) {
 	const [userData, setUserData] = useState({});
 	const [fetchingData, setFetchingData] = useState(false);
 	const [userPhoneNumber, setUserPhoneNumber] = useState("");
-	const [currentOrderNumber , setCurrentOrderNumber] = useState(0);
+	const [currentOrderNumber, setCurrentOrderNumber] = useState(0);
 	async function getUserData() {
 		setFetchingData(true);
 		const q = query(
@@ -57,18 +57,21 @@ function OrderSummary({ navigation, route }) {
 		setFetchingData(false);
 	}
 
-	async function fetchCurrentOrderNumber(){
+	async function fetchCurrentOrderNumber() {
 		const querySnapshot = await getDocs(collection(db, "ordernumber"));
 		querySnapshot.forEach((doc) => {
-			setCurrentOrderNumber(doc.data().curnum)
-		})
+			setCurrentOrderNumber(doc.data().curnum);
+		});
 	}
 
-	async function updateOrderNumber(){
-		const updatedSnap = await updateDoc(doc(db , "ordernumber" , "ie2fi9ZeUWWxhSQi4ssO") , {
-			curnum : increment(1)
-		})
-		console.log("Updated snap : " , updatedSnap)
+	async function updateOrderNumber() {
+		const updatedSnap = await updateDoc(
+			doc(db, "ordernumber", "ie2fi9ZeUWWxhSQi4ssO"),
+			{
+				curnum: increment(1),
+			}
+		);
+		console.log("Updated snap : ", updatedSnap);
 	}
 
 	useEffect(() => {
@@ -91,11 +94,10 @@ function OrderSummary({ navigation, route }) {
 		setUserPhoneNumber(userData.phone);
 	}, [userData]);
 
-	
 	async function uploadDataToFirebase() {
 		const docRef = await addDoc(collection(db, "orders"), {
 			orderId: currentOrderNumber,
-			price: route.params.price - route.params.discount - additionalDiscount,
+			price: Number(route.params.price) - Number(route.params.discount) - Number(additionalDiscount),
 			productId: route.params.productId,
 			productName: route.params.productName,
 			quantity: quantity,
@@ -103,7 +105,7 @@ function OrderSummary({ navigation, route }) {
 			orderStatus: "Pending",
 			createdAt: serverTimestamp(),
 		});
-		updateOrderNumber()
+		updateOrderNumber();
 	}
 
 	function handleSubmit() {
@@ -116,24 +118,27 @@ function OrderSummary({ navigation, route }) {
 					setAnimate(false);
 					navigation.navigate("Homepage");
 				}, 2500);
-				
+
 				const options = {
 					method: "POST",
 					url: `https://urja-proxy-api-production.up.railway.app/api/send`,
-					params : {
-						phone : userPhoneNumber,
-						order_number : currentOrderNumber,
-						item_name : route.params.productName,
-						quantity : quantity,
-						total : quantity * (route.params.price - route.params.discount - additionalDiscount),
-						type : "orderplaced"
-					}
+					params: {
+						phone: userPhoneNumber,
+						order_number: currentOrderNumber,
+						item_name: route.params.productName,
+						quantity: quantity,
+						price:
+							Number(route.params.price) -
+							Number(route.params.discount) -
+							Number(additionalDiscount),
+						type: "orderplaced",
+					},
 				};
 				axios
 					.request(options)
 					.then(function (response) {
 						console.log("Status : ", response.status);
-						console.log("Message sent from the server!")
+						console.log("Message sent from the server!");
 					})
 					.catch(function (error) {
 						console.error(error);
@@ -191,12 +196,13 @@ function OrderSummary({ navigation, route }) {
 						<Text style={styles.totalText}>Quantity : {quantity}</Text>
 						<Text style={styles.totalText}>
 							Total :{" "}
-							{route.params.price - route.params.discount - additionalDiscount}{" "}
+							{Number(route.params.price) -
+								Number(route.params.discount) -
+								Number(additionalDiscount)}{" "}
 							x {quantity} ={" "}
-							{(route.params.price -
-								route.params.discount -
-								additionalDiscount) *
-								quantity}
+							{Number(route.params.price) -
+								Number(route.params.discount) -
+								Number(additionalDiscount) * quantity}
 						</Text>
 					</View>
 					<View style={styles.submitContainer}>
@@ -264,7 +270,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		shadowColor: "#6CD2D9",
 		shadowOpacity: 0.4,
-		elevation : 10,
+		elevation: 10,
 		shadowOffset: { width: 5, height: 5 },
 		marginTop: "10%",
 		width: "50%",
