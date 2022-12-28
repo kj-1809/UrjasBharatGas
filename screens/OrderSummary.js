@@ -119,9 +119,14 @@ function OrderSummary({ navigation, route }) {
 				
 				const options = {
 					method: "POST",
-					url: `https://urja-proxy-api-production.up.railway.app/api/send/orderplaced`,
+					url: `https://urja-proxy-api-production.up.railway.app/api/send`,
 					params : {
-						phone : userPhoneNumber
+						phone : userPhoneNumber,
+						order_number : currentOrderNumber,
+						item_name : route.params.productName,
+						quantity : quantity,
+						total : quantity * (route.params.price - route.params.discount - additionalDiscount),
+						type : "orderplaced"
 					}
 				};
 				axios
