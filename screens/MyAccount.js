@@ -6,6 +6,7 @@ import {
 	KeyboardAvoidingView,
 	ScrollView,
 	Alert,
+	Platform,
 } from "react-native";
 import NextButton from "../components/NextButton";
 import InputWithText from "../components/InputWithText";
@@ -41,7 +42,7 @@ function MyAccount({ navigation }) {
 			setDocId(doc.id);
 			setAddress(doc.data().address);
 			setGstin(doc.data().gstin);
-			setPhone(doc.data().phone)
+			setPhone(doc.data().phone);
 		});
 	}
 
@@ -49,19 +50,18 @@ function MyAccount({ navigation }) {
 		getDataFromFirebase(q);
 	}, []);
 
-
 	function handleResetPassword() {
-		setUploadPending(true)
+		setUploadPending(true);
 		sendPasswordResetEmail(auth, currentUser.email)
 			.then(() => {
-				Alert.alert("Success" , "Password reset email sent successfully !")
-				setUploadPending(false)
+				Alert.alert("Success", "Password reset email sent successfully !");
+				setUploadPending(false);
 			})
 			.catch((error) => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
-				Alert.alert("Error" , errorMessage)
-				setUploadPending(false)
+				Alert.alert("Error", errorMessage);
+				setUploadPending(false);
 			});
 	}
 
@@ -71,7 +71,7 @@ function MyAccount({ navigation }) {
 		await updateDoc(doc(db, "users", docId), {
 			address: address,
 			gstin: gstin,
-			phone : phone,
+			phone: phone,
 		});
 		console.log("Submitted successfully !");
 		setUploadPending(false);
@@ -98,7 +98,11 @@ function MyAccount({ navigation }) {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.headingStyle}>My Account</Text>
-			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+			<KeyboardAvoidingView
+				style={styles.scrollViewStyle}
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 0}
+			>
 				<ScrollView>
 					<View style={styles.inputContainer}>
 						<InputWithText
@@ -114,8 +118,8 @@ function MyAccount({ navigation }) {
 						<InputWithText
 							placeholder={userData && userData.phone}
 							title="Phone"
-							onTextChange = {setPhone}
-							value = {phone}
+							onTextChange={setPhone}
+							value={phone}
 						/>
 						<InputWithText
 							placeholder={userData && userData.address}
@@ -137,7 +141,10 @@ function MyAccount({ navigation }) {
 						<NextButton onClick={handleSignOut}>Sign out</NextButton>
 					</View>
 					<View style={styles.signoutContainer}>
-						<NextButton onClick={handleResetPassword} style = {styles.resetPasswordButton}>
+						<NextButton
+							onClick={handleResetPassword}
+							style={styles.resetPasswordButton}
+						>
 							Reset Password
 						</NextButton>
 					</View>
@@ -189,13 +196,13 @@ const styles = StyleSheet.create({
 	},
 	signoutContainer: {
 		marginTop: "5%",
-	}, 
+	},
 	resetPasswordContainer: {
 		marginTop: "5%",
-	}, 
-	resetPasswordButton : {
-		marginHorizontal : "5%",
-	}
+	},
+	resetPasswordButton: {
+		marginHorizontal: "5%",
+	},
 });
 
 export default MyAccount;

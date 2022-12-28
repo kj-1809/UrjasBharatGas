@@ -32,15 +32,10 @@ function MyOrders() {
 			let newObj = {};
 			for (let key in doc.data()) {
 				if (key == "createdAt") {
-					// const newTime = new Date(doc.data()[key].seconds * 1000)
-					// console.log(newTIme)
-					const options = {
-						year: "numeric",
-						month: "short",
-						day: "numeric",
-					};
+					// date.toLocaleDateString() doesnt work properly on android! 
 					const orderDate = new Date(doc.data()[key].seconds * 1000);
-					newObj.createdAt = orderDate.toLocaleDateString("en-GB", options);
+					const indexToMonth = ["Jan" , "Feb" , "Mar" , "Apr" , "May" , "Jun" , "Jul" , "Aug" , "Sep" , "Oct" , "Nov" , "Dec"]
+					newObj.createdAt = `${orderDate.getDate()} ${indexToMonth[Number(orderDate.getMonth())]} ${orderDate.getFullYear()}`;
 				} else {
 					newObj[key] = doc.data()[key];
 				}
