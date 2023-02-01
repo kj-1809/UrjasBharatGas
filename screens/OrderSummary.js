@@ -20,7 +20,6 @@ import {
 	serverTimestamp,
 	where,
 	query,
-	setLogLevel,
 	updateDoc,
 	increment,
 	doc,
@@ -28,7 +27,6 @@ import {
 import LoadingView from "../components/LoadingView";
 import SuccessAnimation from "../components/SuccessAnimation";
 import axios from "axios";
-import { WHATSAPP_API_KEY, SENDER_NUMBER } from "@env";
 
 function OrderSummary({ navigation, route }) {
 	const [quantity, setQuantity] = useState(1);
