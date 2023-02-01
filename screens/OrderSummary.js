@@ -41,6 +41,7 @@ function OrderSummary({ navigation, route }) {
 	const [userPhoneNumber, setUserPhoneNumber] = useState("");
 	const [currentOrderNumber, setCurrentOrderNumber] = useState(0);
 	async function getUserData() {
+		console.log("uid" , currentUser.uid)
 		setFetchingData(true);
 		const q = query(
 			collection(db, "users"),

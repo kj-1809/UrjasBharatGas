@@ -23,8 +23,7 @@ function OrderNow(props) {
 		getProductsFromDatabase();
 	}, []);
 
-	console.log(products);
-
+	
 	if (products.length == 0) {
 		return <LoadingView message="loading.." />;
 	}
