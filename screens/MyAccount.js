@@ -130,6 +130,8 @@ function MyAccount({ navigation }) {
 							title="Phone"
 							onTextChange={setPhone}
 							value={phone}
+							maxLength = {10}
+							keyboardType = "number-pad"
 						/>
 						<InputWithText
 							placeholder={userData && userData.address}

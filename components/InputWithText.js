@@ -11,6 +11,8 @@ function InputWithText(props) {
 					editable={props.editable}
 					style={styles.inputStyle}
 					onChangeText = {props.onTextChange}
+					maxLength = {props.maxLength ? props.maxLength : 100}
+					keyboardType = {props.keyboardType ? props.keyboardType : "default"}
 				/>
 			</View>
 		</View>

@@ -161,6 +161,7 @@ function Register(props) {
 								onChangeText={setPhone}
 								value={phone}
 								keyboardType = "number-pad"
+								maxLength={10}
 							/>
 						</View>
 						<View style={styles.inputView}>
