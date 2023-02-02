@@ -66,6 +66,16 @@ function MyAccount({ navigation }) {
 	}
 
 	async function handleSubmit() {
+
+		if(phone.length != 10){
+			Alert.alert("Invalid Phone number !" , "Please enter a valid 10 digit phone number!")
+			return;
+		}
+		if(address.length == 0){
+			Alert.alert("Invalid Address" , "Please enter the address !");
+			return;
+		}
+		
 		setUploadPending(true);
 		// // upload data to firestore
 		await updateDoc(doc(db, "users", docId), {

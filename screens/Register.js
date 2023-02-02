@@ -28,17 +28,31 @@ function Register(props) {
 
 	function handleSubmit() {
 		//Create a new user
-		setRegisterPending(true);
-		if (password != confirmPassword) {
-			Alert.alert("Error", "Password do not match !");
-			setRegisterPending(false);
+		if(name.length == 0){
+			Alert.alert("Please enter a name!")
+			return;
+		}
+		if(!email.includes('@') || email.length < 6){
+			Alert.alert("Invalid Email" , "Please enter a valid email !")
+			return;
+		}
+		if(phone.length != 10){
+			Alert.alert("Invalid Phone number" , "Please enter a valid phone number !")
+			return;
+		}
+		if(address.length == 0){
+			Alert.alert("Invalid Address" , "Please enter the address !");
 			return;
 		}
 		if (password.length < 6) {
-			Alert.alert("Error", "Password length should be greater than 6 !");
-			setRegisterPending(false);
+			Alert.alert("Invalid Password", "Password length should be greater than 6 !");
 			return;
 		}
+		if (password != confirmPassword) {
+			Alert.alert("Invalid Password", "Password do not match !");
+			return;
+		}
+		setRegisterPending(true);
 		createUserWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				// Signed in
@@ -70,10 +84,10 @@ function Register(props) {
 				name: name,
 				address: address,
 				gstin: gstin,
-				disc5: 0,
-				disc19: 0,
-				disc47: 0,
-				disc430: 0,
+				disc5: Number(0),
+				disc19: Number(0),
+				disc47: Number(0),
+				disc430: Number(0),
 				email: email,
 				phone: phone,
 				isAdmin: false,
@@ -142,7 +156,7 @@ function Register(props) {
 						</View>
 						<View style={styles.inputView}>
 							<TextInput
-								placeholder="Phone"
+								placeholder="Phone (10 digit)"
 								style={styles.inputText}
 								onChangeText={setPhone}
 								value={phone}

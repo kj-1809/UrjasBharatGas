@@ -24,6 +24,14 @@ function Login(props) {
 	const [fetchingUser , setFetchingUser] = useState(true);
 
 	function handleSubmit() {
+		if(!email.includes('@') || email.length < 6){
+			Alert.alert("Invalid Email" , "Please enter a valid email !")
+			return;
+		}
+		if(password.length < 6){
+			Alert.alert("Invalid Password" , "Min. Length for password is 6 characters !")
+			return;
+		}
 		setLoading(true);
 		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {

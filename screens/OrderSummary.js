@@ -75,7 +75,6 @@ function OrderSummary({ navigation, route }) {
 
 	useEffect(() => {
 		getUserData();
-		fetchCurrentOrderNumber();
 	}, []);
 
 	useEffect(() => {
