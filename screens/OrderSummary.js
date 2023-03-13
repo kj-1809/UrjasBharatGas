@@ -37,9 +37,8 @@ function OrderSummary({ navigation, route }) {
 	const [userData, setUserData] = useState({});
 	const [fetchingData, setFetchingData] = useState(false);
 	const [userPhoneNumber, setUserPhoneNumber] = useState("");
-	const [currentOrderNumber, setCurrentOrderNumber] = useState(0);
 	async function getUserData() {
-		console.log("uid" , currentUser.uid)
+		console.log("uid", currentUser.uid);
 		setFetchingData(true);
 		const q = query(
 			collection(db, "users"),
@@ -52,15 +51,26 @@ function OrderSummary({ navigation, route }) {
 			console.log(doc.data());
 		});
 		setUserData(temp);
-		const val = await fetchCurrentOrderNumber();
 		setFetchingData(false);
 	}
 
 	async function fetchCurrentOrderNumber() {
-		const querySnapshot = await getDocs(collection(db, "ordernumber"));
-		querySnapshot.forEach((doc) => {
-			setCurrentOrderNumber(doc.data().curnum);
+		const fetchPromise = new Promise(async (resolve, reject) => {
+			const querySnapshot = await getDocs(collection(db, "ordernumber"));
+			querySnapshot.forEach((doc) => {
+				if (doc.data().curnum) {
+					resolve(doc.data().curnum);
+				} else {
+					reject(0);
+				}
+			});
 		});
+
+		// maybe implement try-catch here
+		const curOrderNum = await fetchPromise;
+		console.log(curOrderNum, "curOrderNum");
+		
+		return curOrderNum;
 	}
 
 	async function updateOrderNumber() {
@@ -93,20 +103,37 @@ function OrderSummary({ navigation, route }) {
 	}, [userData]);
 
 	async function uploadDataToFirebase() {
-		const docRef = await addDoc(collection(db, "orders"), {
-			orderId: currentOrderNumber,
-			price: Number(route.params.price) - Number(route.params.discount) - Number(additionalDiscount),
-			productId: route.params.productId,
-			productName: route.params.productName,
-			quantity: quantity,
-			uid: currentUser.uid,
-			orderStatus: "Pending",
-			createdAt: serverTimestamp(),
-		});
-		updateOrderNumber();
+		const curOrderNumber = await fetchCurrentOrderNumber();
+		try {
+			const docRef = await addDoc(collection(db, "orders"), {
+				orderId: curOrderNumber,
+				price:
+					Number(route.params.price) -
+					Number(route.params.discount) -
+					Number(additionalDiscount),
+				productId: route.params.productId,
+				productName: route.params.productName,
+				quantity: quantity,
+				uid: currentUser.uid,
+				orderStatus: "Pending",
+				createdAt: serverTimestamp(),
+			});
+		} catch (err) {
+			throw Error(err);
+		}
+		try {
+			await updateOrderNumber();
+		} catch (err) {
+			throw Error(err);
+		}
 	}
 
 	function handleSubmit() {
+		if (quantity <= 0) {
+			Alert.alert("Invalid Quantity !", "Minimum quantity is 1.");
+			return;
+		}
+
 		setLoading(true);
 		uploadDataToFirebase()
 			.then((res) => {
@@ -143,7 +170,8 @@ function OrderSummary({ navigation, route }) {
 					});
 			})
 			.catch((error) => {
-				Alert.alert("Error", "Please try again !");
+				setLoading(false);
+				Alert.alert("Error", "Please try again in some time!", error);
 			});
 	}
 
@@ -197,10 +225,11 @@ function OrderSummary({ navigation, route }) {
 							{Number(route.params.price) -
 								Number(route.params.discount) -
 								Number(additionalDiscount)}{" "}
-							x {quantity} ={" "}
-							{Number(route.params.price) -
+							{""}x {quantity} = {""}
+							{(Number(route.params.price) -
 								Number(route.params.discount) -
-								Number(additionalDiscount) * quantity}
+								Number(additionalDiscount)) *
+								quantity}
 						</Text>
 					</View>
 					<View style={styles.submitContainer}>
