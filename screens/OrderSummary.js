@@ -13,6 +13,8 @@ import {
 import NextButton from "../components/NextButton";
 const deviceWidth = Dimensions.get("screen").width;
 import { auth, db } from "../firebase";
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 import {
 	collection,
 	addDoc,
@@ -23,6 +25,7 @@ import {
 	updateDoc,
 	increment,
 	doc,
+	writeBatch,
 } from "firebase/firestore";
 import LoadingView from "../components/LoadingView";
 import SuccessAnimation from "../components/SuccessAnimation";
@@ -69,18 +72,8 @@ function OrderSummary({ navigation, route }) {
 		// maybe implement try-catch here
 		const curOrderNum = await fetchPromise;
 		console.log(curOrderNum, "curOrderNum");
-		
-		return curOrderNum;
-	}
 
-	async function updateOrderNumber() {
-		const updatedSnap = await updateDoc(
-			doc(db, "ordernumber", "ie2fi9ZeUWWxhSQi4ssO"),
-			{
-				curnum: increment(1),
-			}
-		);
-		console.log("Updated snap : ", updatedSnap);
+		return curOrderNum;
 	}
 
 	useEffect(() => {
@@ -103,28 +96,37 @@ function OrderSummary({ navigation, route }) {
 	}, [userData]);
 
 	async function uploadDataToFirebase() {
+		console.log("im here")
+
 		const curOrderNumber = await fetchCurrentOrderNumber();
-		try {
-			const docRef = await addDoc(collection(db, "orders"), {
-				orderId: curOrderNumber,
-				price:
-					Number(route.params.price) -
-					Number(route.params.discount) -
-					Number(additionalDiscount),
-				productId: route.params.productId,
-				productName: route.params.productName,
-				quantity: quantity,
-				uid: currentUser.uid,
-				orderStatus: "Pending",
-				createdAt: serverTimestamp(),
-			});
-		} catch (err) {
-			throw Error(err);
-		}
-		try {
-			await updateOrderNumber();
-		} catch (err) {
-			throw Error(err);
+		const batch = writeBatch(db);
+		const uuid  = uuidv4()
+
+		const orderRef = doc(db, "orders", uuid);
+		batch.set(orderRef, {
+			orderId: curOrderNumber,
+			price:
+				Number(route.params.price) -
+				Number(route.params.discount) -
+				Number(additionalDiscount),
+			productId: route.params.productId,
+			productName: route.params.productName,
+			quantity: quantity,
+			uid: currentUser.uid,
+			orderStatus: "Pending",
+			createdAt: serverTimestamp(),
+		});
+
+		const updateOrderRef = doc(db, "ordernumber", "ie2fi9ZeUWWxhSQi4ssO");
+		batch.update(updateOrderRef, {
+			curnum: increment(1),
+		});
+
+		try{
+			await batch.commit()
+		}catch(err){
+			console.log("Error inside")
+			throw Error(err)
 		}
 	}
 
@@ -149,7 +151,7 @@ function OrderSummary({ navigation, route }) {
 					url: `https://urja-proxy-api-production.up.railway.app/api/send`,
 					params: {
 						phone: userPhoneNumber,
-						order_number: currentOrderNumber,
+						order_number:10, 
 						item_name: route.params.productName,
 						quantity: quantity,
 						price:
@@ -171,7 +173,8 @@ function OrderSummary({ navigation, route }) {
 			})
 			.catch((error) => {
 				setLoading(false);
-				Alert.alert("Error", "Please try again in some time!", error);
+				console.log("error:: " , error)
+				Alert.alert("Error", "Please try again in some time!");
 			});
 	}
 
