@@ -15,6 +15,7 @@ const deviceWidth = Dimensions.get("screen").width;
 import { auth, db } from "../firebase";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import * as Haptics from 'expo-haptics';
 import {
 	collection,
 	addDoc,
@@ -32,7 +33,6 @@ import SuccessAnimation from "../components/SuccessAnimation";
 import axios from "axios";
 
 function OrderSummary({ navigation, route }) {
-	const [quantity, setQuantity] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const currentUser = auth.currentUser;
 	const [animate, setAnimate] = useState(false);
@@ -40,6 +40,7 @@ function OrderSummary({ navigation, route }) {
 	const [userData, setUserData] = useState({});
 	const [fetchingData, setFetchingData] = useState(false);
 	const [userPhoneNumber, setUserPhoneNumber] = useState("");
+	const [quantity, setQuantity] = useState(1);
 	async function getUserData() {
 		console.log("uid", currentUser.uid);
 		setFetchingData(true);
@@ -141,6 +142,8 @@ function OrderSummary({ navigation, route }) {
 			.then((res) => {
 				setLoading(false);
 				setAnimate(true);
+				// haptic feedback
+				Haptics.notificationAsync()
 				setTimeout(() => {
 					setAnimate(false);
 					navigation.navigate("Homepage");
@@ -148,12 +151,10 @@ function OrderSummary({ navigation, route }) {
 
 				const options = {
 					method: "POST",
-					url: `https://urja-proxy-api-production.up.railway.app/api/send`,
+					url: "https://urja-proxy-api-production.up.railway.app/api/send",
 					params: {
 						phone: userPhoneNumber,
-						order_number:10, 
 						item_name: route.params.productName,
-						quantity: quantity,
 						price:
 							Number(route.params.price) -
 							Number(route.params.discount) -
@@ -163,11 +164,12 @@ function OrderSummary({ navigation, route }) {
 				};
 				axios
 					.request(options)
-					.then(function (response) {
+					.then((response) => {
 						console.log("Status : ", response.status);
 						console.log("Message sent from the server!");
 					})
-					.catch(function (error) {
+					.catch((error) => {
+						console.log("error while sending the message")
 						console.error(error);
 					});
 			})
@@ -217,7 +219,7 @@ function OrderSummary({ navigation, route }) {
 								placeholder="Quantity"
 								keyboardType="number-pad"
 								onChangeText={setQuantity}
-								value={quantity}
+								value = {quantity}
 							/>
 						</View>
 					</View>

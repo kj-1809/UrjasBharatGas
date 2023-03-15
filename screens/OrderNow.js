@@ -3,6 +3,7 @@ import ProductView from "../components/ProductView";
 import { useEffect, useState } from "react";
 import { collection, query, where, getDocs, doc } from "firebase/firestore";
 import { db, auth } from "../firebase";
+import * as Haptics from 'expo-haptics';
 
 import LoadingView from "../components/LoadingView";
 
@@ -29,6 +30,7 @@ function OrderNow(props) {
 	}
 
 	function navigateToSummary(item) {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 		const data = {
 			productId: item.productId,
 			productName: item.productName,

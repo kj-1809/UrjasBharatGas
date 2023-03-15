@@ -14,7 +14,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import NextButton from "../components/NextButton";
 import { useEffect, useState } from "react";
 import LoadingView from "../components/LoadingView";
-
+import * as Haptics from 'expo-haptics';
 import { onAuthStateChanged } from "firebase/auth/react-native";
 
 function Login(props) {
@@ -24,6 +24,7 @@ function Login(props) {
 	const [fetchingUser , setFetchingUser] = useState(true);
 
 	function handleSubmit() {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 		if(!email.includes('@') || email.length < 6){
 			Alert.alert("Invalid Email" , "Please enter a valid email !")
 			return;

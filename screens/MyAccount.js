@@ -22,7 +22,7 @@ import {
 import { db, auth } from "../firebase";
 import LoadingView from "../components/LoadingView";
 import { sendPasswordResetEmail } from "firebase/auth";
-
+import * as Haptics from 'expo-haptics';
 function MyAccount({ navigation }) {
 	const [address, setAddress] = useState("");
 	const [gstin, setGstin] = useState("");
@@ -51,6 +51,7 @@ function MyAccount({ navigation }) {
 	}, []);
 
 	function handleResetPassword() {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 		setUploadPending(true);
 		sendPasswordResetEmail(auth, currentUser.email)
 			.then(() => {
@@ -66,7 +67,7 @@ function MyAccount({ navigation }) {
 	}
 
 	async function handleSubmit() {
-
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 		if(phone.length != 10){
 			Alert.alert("Invalid Phone number !" , "Please enter a valid 10 digit phone number!")
 			return;
@@ -90,6 +91,7 @@ function MyAccount({ navigation }) {
 	}
 
 	function handleSignOut() {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 		signOut(auth)
 			.then(() => {
 				console.log("Sign out successfull");

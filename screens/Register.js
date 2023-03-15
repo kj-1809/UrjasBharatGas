@@ -15,6 +15,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useContext, useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import LoadingView from "../components/LoadingView";
+import * as Haptics from 'expo-haptics';
 
 function Register(props) {
 	const [email, setEmail] = useState("");
@@ -28,6 +29,7 @@ function Register(props) {
 
 	function handleSubmit() {
 		//Create a new user
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 		if(name.length == 0){
 			Alert.alert("Please enter a name!")
 			return;

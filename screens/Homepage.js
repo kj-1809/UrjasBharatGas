@@ -4,6 +4,7 @@ import { useState } from "react";
 import { collection, query, where, getDocs, doc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import LoadingView from "../components/LoadingView";
+import * as Haptics from 'expo-haptics';
 function Homepage({ navigation }) {
 	const [name, setName] = useState("");
 	const currentUser = auth.currentUser;
@@ -34,6 +35,7 @@ function Homepage({ navigation }) {
 					<CustomButton
 						style={{ backgroundColor: "#FDFDBD" }}
 						onClick={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 							navigation.navigate("OrderNow");
 						}}
 					>
@@ -42,6 +44,7 @@ function Homepage({ navigation }) {
 					<CustomButton
 						style={{ backgroundColor: "#B8E8FC" }}
 						onClick={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 							navigation.navigate("MyOrders");
 						}}
 					>
@@ -52,6 +55,7 @@ function Homepage({ navigation }) {
 					<CustomButton
 						style={{ backgroundColor: "#C8FFD4" }}
 						onClick={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 							navigation.navigate("MyAccount");
 						}}
 					>
@@ -60,6 +64,7 @@ function Homepage({ navigation }) {
 					<CustomButton
 						style={{ backgroundColor: "#BCCEF8" }}
 						onClick={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 							navigation.navigate("AboutUs");
 						}}
 					>
