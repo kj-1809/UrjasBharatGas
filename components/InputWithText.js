@@ -1,6 +1,7 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 function InputWithText(props) {
+	console.log("INPUT TXT " , props.selectTextOnFocus)
 	return (
 		<View style = {styles.rootContainer}>
 			<Text style = {styles.textStyle}>{props.title}</Text>
@@ -13,6 +14,7 @@ function InputWithText(props) {
 					onChangeText = {props.onTextChange}
 					maxLength = {props.maxLength ? props.maxLength : 100}
 					keyboardType = {props.keyboardType ? props.keyboardType : "default"}
+					selectTextOnFocus = {false}
 				/>
 			</View>
 		</View>

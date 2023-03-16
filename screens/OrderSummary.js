@@ -220,6 +220,7 @@ function OrderSummary({ navigation, route }) {
 								keyboardType="number-pad"
 								onChangeText={setQuantity}
 								value = {quantity}
+								returnKeyType = {'done'}
 							/>
 						</View>
 					</View>
