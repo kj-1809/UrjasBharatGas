@@ -84,7 +84,6 @@ function MyAccount({ navigation }) {
 			gstin: gstin,
 			phone: phone,
 		});
-		console.log("Submitted successfully !");
 		setUploadPending(false);
 		Alert.alert("Success", "Your details were updated successfully");
 		navigation.navigate("Homepage");
@@ -94,7 +93,6 @@ function MyAccount({ navigation }) {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 		signOut(auth)
 			.then(() => {
-				console.log("Sign out successfull");
 				Alert.alert("Success", "Logged out successfully");
 			})
 			.catch((error) => {

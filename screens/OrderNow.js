@@ -20,7 +20,6 @@ function OrderNow(props) {
 	}
 
 	useEffect(() => {
-		console.log("triggered");
 		getProductsFromDatabase();
 	}, []);
 

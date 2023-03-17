@@ -17,12 +17,12 @@ import LoadingView from "../components/LoadingView";
 function MyOrders() {
 	const [orders, setOrders] = useState([]);
 	const currentUser = auth.currentUser;
-	console.log(currentUser.uid);
 
 	const q = query(
 		collection(db, "orders"),
 		where("uid", "==", currentUser.uid),
-		orderBy("orderId", "desc")
+		orderBy("orderId", "desc"),
+		limit(50)
 	);
 
 	async function getDataFromFirebase(queryData) {
@@ -52,7 +52,6 @@ function MyOrders() {
 		getDataFromFirebase(q);
 	}, []);
 
-	console.log(orders);
 
 	if (!orders[0] == 1) {
 		return <LoadingView message="fetching data.." />;

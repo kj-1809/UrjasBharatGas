@@ -106,7 +106,6 @@ export default function App() {
 		);
 	}
 	function handleSignUpPress() {
-		console.log("signUP pressed");
 		setScreen(
 			<Register onLoginPress={handleLoginPress} onSuccess={handleAuthSuccess} />
 		);

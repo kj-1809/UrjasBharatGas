@@ -16,6 +16,7 @@ import { auth, db } from "../firebase";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import * as Haptics from 'expo-haptics';
+
 import {
 	collection,
 	addDoc,
@@ -42,7 +43,6 @@ function OrderSummary({ navigation, route }) {
 	const [userPhoneNumber, setUserPhoneNumber] = useState("");
 	const [quantity, setQuantity] = useState(1);
 	async function getUserData() {
-		console.log("uid", currentUser.uid);
 		setFetchingData(true);
 		const q = query(
 			collection(db, "users"),
@@ -52,7 +52,6 @@ function OrderSummary({ navigation, route }) {
 		let temp = {};
 		querySnapshot.forEach((doc) => {
 			temp = doc.data();
-			console.log(doc.data());
 		});
 		setUserData(temp);
 		setFetchingData(false);
@@ -72,7 +71,6 @@ function OrderSummary({ navigation, route }) {
 
 		// maybe implement try-catch here
 		const curOrderNum = await fetchPromise;
-		console.log(curOrderNum, "curOrderNum");
 
 		return curOrderNum;
 	}
@@ -97,7 +95,6 @@ function OrderSummary({ navigation, route }) {
 	}, [userData]);
 
 	async function uploadDataToFirebase() {
-		console.log("im here")
 
 		const curOrderNumber = await fetchCurrentOrderNumber();
 		const batch = writeBatch(db);
@@ -139,7 +136,7 @@ function OrderSummary({ navigation, route }) {
 
 		setLoading(true);
 		uploadDataToFirebase()
-			.then((res) => {
+			.then(async (res) => {
 				setLoading(false);
 				setAnimate(true);
 				// haptic feedback
@@ -170,7 +167,7 @@ function OrderSummary({ navigation, route }) {
 					})
 					.catch((error) => {
 						console.log("error while sending the message")
-						console.error(error);
+						console.log(error)
 					});
 			})
 			.catch((error) => {
@@ -210,6 +207,7 @@ function OrderSummary({ navigation, route }) {
 							Rs.{" "}
 							{route.params.price - route.params.discount - additionalDiscount}
 						</Text>
+						<Text style = {styles.detailsText2}>(inc. GST + Delivery)</Text>
 						<Text style={styles.detailsText}>{route.params.productName}</Text>
 					</View>
 					<View style={styles.inputWholeContainer}>
@@ -288,6 +286,14 @@ const styles = StyleSheet.create({
 		fontFamily: "MontserratSemiBold",
 		fontSize: 18,
 		opacity: 0.5,
+		marginTop: "2%",
+		textAlign: "center",
+		marginHorizontal: "5%",
+	},
+	detailsText2 : {
+		fontFamily: "MontserratSemiBold",
+		fontSize: 12,
+		opacity: 0.4,
 		marginTop: "2%",
 		textAlign: "center",
 		marginHorizontal: "5%",

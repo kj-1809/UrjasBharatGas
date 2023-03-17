@@ -1,7 +1,6 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 function InputWithText(props) {
-	console.log("INPUT TXT " , props.selectTextOnFocus)
 	return (
 		<View style = {styles.rootContainer}>
 			<Text style = {styles.textStyle}>{props.title}</Text>
