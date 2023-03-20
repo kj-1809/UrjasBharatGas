@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet,Dimensions } from "react-native";
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 
+
 function CustomButton({ children, onClick , style}) {
 	return (
 		<View style={styles.buttonContainer}>
@@ -13,14 +14,20 @@ function CustomButton({ children, onClick , style}) {
 	);
 }
 
+let sz = 0;
+if((deviceWidth / 2) <= deviceHeight * 0.325){
+	sz = (deviceWidth/2) - 30;
+}else{
+	sz = (deviceHeight * 0.325) - deviceHeight * 0.09; 
+}
 
 
 export default CustomButton;
 
 const styles = StyleSheet.create({
 	buttonContainer: {
-    height : (deviceWidth/2) - 30,
-    width : (deviceWidth/2) - 30,
+    height : sz, 
+    width : sz, 
 		alignItems: "center",
 		justifyContent: "center",
 		marginHorizontal: "3%",
@@ -31,8 +38,8 @@ const styles = StyleSheet.create({
 	},
 	buttonPressable: {
     backgroundColor: "#6CD2D9",
-    height : (deviceWidth/2) - 30,
-    width : (deviceWidth/2) - 30,
+    height : sz, 
+    width : sz, 
     alignItems : 'center',
     justifyContent : 'center',
 		borderRadius: 35,

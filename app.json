@@ -18,12 +18,13 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber" : "1.0.0",
-      "supportsTablet": true
+      "buildNumber": "1.0.0",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.urjasbharatgas.urjas"
     },
     "android": {
-      "package" : "com.urjasbharatgas.urjas",
-      "versionCode" : 1,
+      "package": "com.urjasbharatgas.urjas",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -31,6 +32,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3deb7856-2ddb-43fd-b491-8ecd89f44893"
+      }
     }
   }
 }
