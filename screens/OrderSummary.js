@@ -123,7 +123,6 @@ function OrderSummary({ navigation, route }) {
 		try{
 			await batch.commit()
 		}catch(err){
-			console.log("Error inside")
 			throw Error(err)
 		}
 	}
@@ -163,10 +162,8 @@ function OrderSummary({ navigation, route }) {
 					.request(options)
 					.then((response) => {
 						console.log("Status : ", response.status);
-						console.log("Message sent from the server!");
 					})
 					.catch((error) => {
-						console.log("error while sending the message")
 						console.log(error)
 					});
 			})

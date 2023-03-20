@@ -59,8 +59,6 @@ function Register(props) {
 			.then((userCredential) => {
 				// Signed in
 				const user = userCredential.user;
-				console.log("User Created successfully");
-				console.log("User id : ", user.uid);
 				// add all of the data to users collection in firestore
 				uploadUserData(user.uid);
 				// navigate to homescreen
@@ -68,7 +66,6 @@ function Register(props) {
 				props.onSuccess();
 			})
 			.catch((error) => {
-				console.log(error.code);
 				console.log(error.message);
 				setRegisterPending(false);
 				Alert.alert("Error", error.message);
@@ -94,7 +91,6 @@ function Register(props) {
 				phone: phone,
 				isAdmin: false,
 			});
-			console.log("Document written with ID: ", docRef.id);
 		} catch (e) {
 			console.error("Error adding document: ", e);
 			// maybe if the data wasnt stored on the database , then delete the created user
@@ -188,7 +184,6 @@ function Register(props) {
 					<View style={styles.submitContainer}>
 						<NextButton onClick={handleSubmit}>Register</NextButton>
 					</View>
-
 					<View style={styles.signUpTextContainer}>
 						<Pressable onPress={props.onLoginPress}>
 							<Text style={styles.signUpText}>

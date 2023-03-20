@@ -14,32 +14,32 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import NextButton from "../components/NextButton";
 import { useEffect, useState } from "react";
 import LoadingView from "../components/LoadingView";
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
 import { onAuthStateChanged } from "firebase/auth/react-native";
 
 function Login(props) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [fetchingUser , setFetchingUser] = useState(true);
+	const [fetchingUser, setFetchingUser] = useState(true);
 
 	function handleSubmit() {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-		if(!email.includes('@') || email.length < 6){
-			Alert.alert("Invalid Email" , "Please enter a valid email !")
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+		if (!email.includes("@") || email.length < 6) {
+			Alert.alert("Invalid Email", "Please enter a valid email !");
 			return;
 		}
-		if(password.length < 6){
-			Alert.alert("Invalid Password" , "Min. Length for password is 6 characters !")
+		if (password.length < 6) {
+			Alert.alert(
+				"Invalid Password",
+				"Min. Length for password is 6 characters !"
+			);
 			return;
 		}
 		setLoading(true);
 		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				const user = userCredential.user;
-				console.log("User logged in successfully");
-				console.log(user.email);
-				console.log(user.uid);
 				setLoading(false);
 				//navigate to homepage
 				props.onSuccess();
@@ -47,42 +47,33 @@ function Login(props) {
 			.catch((error) => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
-				console.log(errorCode);
-				console.log(errorMessage);
 				Alert.alert("Error", errorMessage);
 				setLoading(false);
 			});
 	}
 
-	
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
-				// User is signed in, see docs for a list of available properties
-				// https://firebase.google.com/docs/reference/js/firebase.User
-				console.log(user);
 				props.onSuccess();
-				setFetchingUser(false)
-				// setScreen(<AuthenticatedStack />);
+				setFetchingUser(false);
 			} else {
 				// not logged in
-				console.log("Not logged in ! ");
-				setFetchingUser(false)
+				setFetchingUser(false);
 			}
 		});
-	} , [])
-	
+	}, []);
+
 	if (loading) {
 		return <LoadingView message="Loggin you in ...." />;
 	}
-	if(fetchingUser){
+	if (fetchingUser) {
 		return null;
 	}
 
-	
 	return (
 		<View style={styles.container}>
-			{console.log("in render")}
+			<Text style={styles.test}>hello ? </Text>
 			<View style={styles.backgroundContainer}>
 				<Image
 					source={require("../assets/images/Base.png")}
@@ -91,8 +82,11 @@ function Login(props) {
 			</View>
 			<Text style={styles.loginText}>Login</Text>
 			<Text style={styles.loginText2}>Please sign in to continue</Text>
-			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior={Platform.OS === "ios" ? "padding" : "height"}>
-				<ScrollView>
+			<KeyboardAvoidingView
+				style={styles.scrollViewStyle}
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+			>
+				<ScrollView style={styles.scrollViewStyle}>
 					<View style={styles.inputContainer}>
 						<View style={styles.inputView}>
 							<TextInput
@@ -116,11 +110,9 @@ function Login(props) {
 							/>
 						</View>
 					</View>
-
 					<View style={styles.submitContainer}>
 						<NextButton onClick={handleSubmit}>Submit</NextButton>
 					</View>
-
 					<View style={styles.signUpTextContainer}>
 						<Pressable onPress={props.onSignUpPress}>
 							<Text style={styles.signUpText}>
@@ -130,7 +122,7 @@ function Login(props) {
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>
-		</View> 
+		</View>
 	);
 }
 
@@ -165,7 +157,7 @@ const styles = StyleSheet.create({
 		shadowColor: "#6CD2D9",
 		shadowOpacity: 0.4,
 		shadowOffset: { width: 5, height: 5 },
-		elevation : 20
+		elevation: 20,
 	},
 	inputText: {
 		fontSize: 15,
@@ -183,7 +175,11 @@ const styles = StyleSheet.create({
 		marginTop: "10%",
 	},
 	signUpTextContainer: {
-		marginTop: "20%",
+		// position: "absolute",
+		// bottom: 15,
+		// left: 0,
+		// right: 0,
+		marginTop : "15%"
 	},
 	signUpText: {
 		fontFamily: "Montserrat",
