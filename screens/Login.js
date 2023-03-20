@@ -113,15 +113,26 @@ function Login(props) {
 					<View style={styles.submitContainer}>
 						<NextButton onClick={handleSubmit}>Submit</NextButton>
 					</View>
-					<View style={styles.signUpTextContainer}>
-						<Pressable onPress={props.onSignUpPress}>
-							<Text style={styles.signUpText}>
-								Don't have an account? Register
-							</Text>
-						</Pressable>
-					</View>
+					{Platform.OS === "android" && (
+						<View style={styles.signUpTextContainer}>
+							<Pressable onPress={props.onSignUpPress}>
+								<Text style={styles.signUpText}>
+									Don't have an account? Register
+								</Text>
+							</Pressable>
+						</View>
+					)}
 				</ScrollView>
 			</KeyboardAvoidingView>
+			{Platform.OS === "ios" && (
+				<View style={styles.signUpTextContainer2}>
+					<Pressable onPress={props.onSignUpPress}>
+						<Text style={styles.signUpText}>
+							Don't have an account? Register
+						</Text>
+					</Pressable>
+				</View>
+			)}
 		</View>
 	);
 }
@@ -179,7 +190,13 @@ const styles = StyleSheet.create({
 		// bottom: 15,
 		// left: 0,
 		// right: 0,
-		marginTop : "15%"
+		marginTop: "15%",
+	},
+	signUpTextContainer2 : {
+		position: "absolute",
+		bottom: "3.5%",
+		left: 0,
+		right: 0,
 	},
 	signUpText: {
 		fontFamily: "Montserrat",

@@ -28,7 +28,11 @@
         "appleId" : "munishmandla@gmail.com",
         "ascAppId" : "6446482161",
         "appleTeamId" : "3AB8BUX77S"
+      },
+      "android" : {
+        "serviceAccountKeyPath" : "../urjasbharatgasfiles/pc-api-5125267175626812149-746-9f136e7e1370.json"
       }
+      
     }
   }
 }
