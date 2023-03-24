@@ -12,10 +12,10 @@ import {
 import NextButton from "../components/NextButton";
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import LoadingView from "../components/LoadingView";
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
 
 function Register(props) {
 	const [email, setEmail] = useState("");
@@ -29,25 +29,31 @@ function Register(props) {
 
 	function handleSubmit() {
 		//Create a new user
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-		if(name.length == 0){
-			Alert.alert("Please enter a name!")
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+		if (name.length == 0) {
+			Alert.alert("Please enter a name!");
 			return;
 		}
-		if(!email.includes('@') || email.length < 6){
-			Alert.alert("Invalid Email" , "Please enter a valid email !")
+		if (!email.includes("@") || email.length < 6) {
+			Alert.alert("Invalid Email", "Please enter a valid email !");
 			return;
 		}
-		if(phone.length != 10){
-			Alert.alert("Invalid Phone number" , "Please enter a valid phone number !")
+		if (phone.length != 10) {
+			Alert.alert(
+				"Invalid Phone number",
+				"Please enter a valid phone number !"
+			);
 			return;
 		}
-		if(address.length == 0){
-			Alert.alert("Invalid Address" , "Please enter the address !");
+		if (address.length == 0) {
+			Alert.alert("Invalid Address", "Please enter the address !");
 			return;
 		}
 		if (password.length < 6) {
-			Alert.alert("Invalid Password", "Password length should be greater than 6 !");
+			Alert.alert(
+				"Invalid Password",
+				"Password length should be greater than 6 !"
+			);
 			return;
 		}
 		if (password != confirmPassword) {
@@ -98,6 +104,7 @@ function Register(props) {
 		}
 	}
 
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.backgroundContainer}>
@@ -109,7 +116,10 @@ function Register(props) {
 			<Text style={styles.loginText}>Register</Text>
 			<Text style={styles.loginText2}>Please sign up to continue</Text>
 
-			<KeyboardAvoidingView style={styles.scrollViewStyle} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+			<KeyboardAvoidingView
+				style={styles.scrollViewStyle}
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+			>
 				<ScrollView>
 					<View style={styles.inputContainer}>
 						<View style={styles.inputView}>
@@ -158,7 +168,7 @@ function Register(props) {
 								style={styles.inputText}
 								onChangeText={setPhone}
 								value={phone}
-								keyboardType = "number-pad"
+								keyboardType="number-pad"
 								maxLength={10}
 							/>
 						</View>
@@ -200,6 +210,7 @@ function Register(props) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: "#ffffff",
 	},
 	loginText: {
 		fontSize: 50,
@@ -215,10 +226,7 @@ const styles = StyleSheet.create({
 		opacity: 0.5,
 	},
 	inputContainer: {
-		// backgroundColor: "green",
-		// marginTop: "20%",
 		marginHorizontal: "3%",
-		// padding : 10
 	},
 	inputView: {
 		height: 50,
@@ -229,15 +237,14 @@ const styles = StyleSheet.create({
 		shadowColor: "#6CD2D9",
 		shadowOpacity: 0.4,
 		shadowOffset: { width: 5, height: 5 },
-		elevation : 8
-
+		elevation: 8,
+		padding: 10,
 	},
 	inputText: {
 		fontSize: 15,
 		fontFamily: "MontserratSemiBold",
-		// backgroundColor : "#F6F6C9",
-		paddingHorizontal: 12,
-		paddingVertical: 12,
+		height: 50,
+		borderRadius: 15,
 	},
 	backgroundContainer: {
 		position: "absolute",
@@ -245,7 +252,6 @@ const styles = StyleSheet.create({
 		left: 0,
 	},
 	image: {
-		//check if this works normally
 		flex: 1,
 	},
 	submitContainer: {
@@ -257,6 +263,8 @@ const styles = StyleSheet.create({
 		bottom: 10,
 		left: 1,
 		right: 1,
+		padding: 5,
+		marginHorizontal: 20,
 	},
 	signUpText: {
 		fontFamily: "Montserrat",

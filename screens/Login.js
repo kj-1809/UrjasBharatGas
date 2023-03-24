@@ -8,6 +8,7 @@ import {
 	KeyboardAvoidingView,
 	ScrollView,
 	Alert,
+	Keyboard
 } from "react-native";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -15,13 +16,26 @@ import NextButton from "../components/NextButton";
 import { useEffect, useState } from "react";
 import LoadingView from "../components/LoadingView";
 import * as Haptics from "expo-haptics";
-import { onAuthStateChanged } from "firebase/auth/react-native";
+import {
+	onAuthStateChanged,
+} from "firebase/auth/react-native";
 
 function Login(props) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [fetchingUser, setFetchingUser] = useState(true);
+	const [isKeyboardOn, setIsKeyboardOn] = useState(false);
+
+	useEffect(() => {
+		Keyboard.addListener("keyboardDidShow", () => {
+			setIsKeyboardOn(true)
+		});
+
+		Keyboard.addListener("keyboardDidHide", () => {
+			setIsKeyboardOn(false)
+		})
+	} , []);
 
 	function handleSubmit() {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -71,9 +85,9 @@ function Login(props) {
 		return null;
 	}
 
+
 	return (
 		<View style={styles.container}>
-			<Text style={styles.test}>hello ? </Text>
 			<View style={styles.backgroundContainer}>
 				<Image
 					source={require("../assets/images/Base.png")}
@@ -113,7 +127,7 @@ function Login(props) {
 					<View style={styles.submitContainer}>
 						<NextButton onClick={handleSubmit}>Submit</NextButton>
 					</View>
-					{Platform.OS === "android" && (
+					{isKeyboardOn && (
 						<View style={styles.signUpTextContainer}>
 							<Pressable onPress={props.onSignUpPress}>
 								<Text style={styles.signUpText}>
@@ -124,7 +138,7 @@ function Login(props) {
 					)}
 				</ScrollView>
 			</KeyboardAvoidingView>
-			{Platform.OS === "ios" && (
+			{ !isKeyboardOn && (
 				<View style={styles.signUpTextContainer2}>
 					<Pressable onPress={props.onSignUpPress}>
 						<Text style={styles.signUpText}>
@@ -140,6 +154,7 @@ function Login(props) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: "#ffffff",
 	},
 	loginText: {
 		fontSize: 50,
@@ -173,6 +188,8 @@ const styles = StyleSheet.create({
 	inputText: {
 		fontSize: 15,
 		fontFamily: "MontserratSemiBold",
+		height: 50,
+		borderRadius: 15,
 	},
 	backgroundContainer: {
 		position: "absolute",
@@ -186,17 +203,18 @@ const styles = StyleSheet.create({
 		marginTop: "10%",
 	},
 	signUpTextContainer: {
-		// position: "absolute",
-		// bottom: 15,
-		// left: 0,
-		// right: 0,
 		marginTop: "15%",
+		padding: 5,
+		marginHorizontal: 20,
 	},
-	signUpTextContainer2 : {
+	signUpTextContainer2: {
 		position: "absolute",
-		bottom: "3.5%",
+		bottom: "3%",
 		left: 0,
+		// padding : 10
 		right: 0,
+		padding: 5,
+		marginHorizontal : 20,
 	},
 	signUpText: {
 		fontFamily: "Montserrat",

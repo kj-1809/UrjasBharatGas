@@ -144,3 +144,5 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 });
+// currentIOS v1.0.0 buildNumber : 1
+// currentAndroid v1.0.2 versionCode : 3
