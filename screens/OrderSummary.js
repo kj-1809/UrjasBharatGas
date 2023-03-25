@@ -71,7 +71,6 @@ function OrderSummary({ navigation, route }) {
 
 		// maybe implement try-catch here
 		const curOrderNum = await fetchPromise;
-
 		return curOrderNum;
 	}
 
@@ -128,6 +127,7 @@ function OrderSummary({ navigation, route }) {
 	}
 
 	function handleSubmit() {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 		if (quantity <= 0) {
 			Alert.alert("Invalid Quantity !", "Minimum quantity is 1.");
 			return;
@@ -266,7 +266,6 @@ const styles = StyleSheet.create({
 		shadowColor: "#6CD2D9",
 		shadowOpacity: 1,
 		shadowOffset: { width: 5, height: 5 },
-		// alignItems : 'center'
 	},
 	image: {
 		height: (deviceWidth / 2 - 30) * (4 / 3),

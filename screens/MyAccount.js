@@ -144,6 +144,7 @@ function MyAccount({ navigation }) {
 							title="GSTIN"
 							onTextChange={setGstin}
 							value={gstin}
+							capital = {true}
 						/>
 					</View>
 					<View style={styles.submitContainer}>
@@ -152,7 +153,7 @@ function MyAccount({ navigation }) {
 					<View style={styles.signoutContainer}>
 						<NextButton onClick={handleSignOut}>Sign out</NextButton>
 					</View>
-					<View style={styles.signoutContainer}>
+					<View style={styles.resetPasswordContainer}>
 						<NextButton
 							onClick={handleResetPassword}
 							style={styles.resetPasswordButton}
@@ -177,11 +178,8 @@ const styles = StyleSheet.create({
 		fontFamily: "MontserratSemiBold",
 	},
 	inputContainer: {
-		// backgroundColor: "green",
-		// marginTop: "20%",
 		marginHorizontal: "3%",
 		marginTop: "15%",
-		// padding : 10
 	},
 	inputView: {
 		height: 50,
@@ -196,7 +194,6 @@ const styles = StyleSheet.create({
 	inputText: {
 		fontSize: 15,
 		fontFamily: "MontserratSemiBold",
-		// backgroundColor : "#F6F6C9",
 		paddingHorizontal: 12,
 		paddingVertical: 12,
 	},
@@ -207,13 +204,14 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	signoutContainer: {
-		marginTop: "5%",
+		marginTop: "3%",
 	},
 	resetPasswordContainer: {
-		marginTop: "5%",
+		marginTop: "3%",
+		paddingBottom : "10%"
 	},
 	resetPasswordButton: {
-		marginHorizontal: "5%",
+		marginHorizontal: "3%",
 	},
 });
 

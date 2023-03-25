@@ -1,8 +1,8 @@
-import { Text, View, StyleSheet, Image, FlatList } from "react-native";
+import { Text, View, StyleSheet, FlatList } from "react-native";
 import ProductView from "../components/ProductView";
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs, doc } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { collection, getDocs, doc } from "firebase/firestore";
+import { db, } from "../firebase";
 import * as Haptics from 'expo-haptics';
 
 import LoadingView from "../components/LoadingView";

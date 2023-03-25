@@ -79,7 +79,7 @@ function Login(props) {
 	}, []);
 
 	if (loading) {
-		return <LoadingView message="Loggin you in ...." />;
+		return <LoadingView message="Logging you in ...." />;
 	}
 	if (fetchingUser) {
 		return null;
@@ -106,10 +106,11 @@ function Login(props) {
 							<TextInput
 								placeholder="Email"
 								style={styles.inputText}
-								autoCapitalize={false}
+								autoCapitalize = "none"
 								autoCorrect={false}
 								onChangeText={setEmail}
 								value={email}
+								keyboardType = "email-address"
 							/>
 						</View>
 						<View style={styles.inputView}>
@@ -117,7 +118,7 @@ function Login(props) {
 								placeholder="Password"
 								style={styles.inputText}
 								secureTextEntry={true}
-								autoCapitalize={false}
+								autoCapitalize="none"
 								autoCorrect={false}
 								onChangeText={setPassword}
 								value={password}
@@ -211,7 +212,6 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		bottom: "3%",
 		left: 0,
-		// padding : 10
 		right: 0,
 		padding: 5,
 		marginHorizontal : 20,

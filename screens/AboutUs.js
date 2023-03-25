@@ -24,7 +24,7 @@ function AboutUs() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		flexDirection: "column",
+		flexDirection: "center",
 		alignItems: "center",
 		marginHorizontal: 10,
 	},
@@ -54,7 +54,11 @@ const styles = StyleSheet.create({
   developerText : {
     fontFamily : 'MontserratSemiBold',
     fontSize : 12,
-    marginTop : "15%"
+		position : "absolute",
+		bottom : 15,
+		left : 0, 
+		right : 0,
+		textAlign : "center"
   }
 });
 

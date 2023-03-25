@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import { Text, View, StyleSheet, FlatList, Alert } from "react-native";
 import ListItem from "../components/ListItem";
 
 import {
@@ -6,15 +6,15 @@ import {
 	query,
 	where,
 	getDocs,
-	doc,
 	limit,
 	orderBy,
+	deleteDoc,
+	doc
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useState, useEffect } from "react";
 import LoadingView from "../components/LoadingView";
-
-function MyOrders() {
+function MyOrders({navigation}) {
 	const [orders, setOrders] = useState([]);
 	const currentUser = auth.currentUser;
 
@@ -24,6 +24,18 @@ function MyOrders() {
 		orderBy("orderId", "desc"),
 		limit(50)
 	);
+
+	async function handleOrderCancel(docId){
+		console.log("Delete")
+		console.log(docId)
+		try {
+			await deleteDoc(doc(db, "orders", docId));
+			navigation.navigate("Homepage");
+			Alert.alert("Order Deleted Successfully !")
+		} catch (err) {
+			Alert.alert("Some error occured !")
+		}
+	}
 
 	async function getDataFromFirebase(queryData) {
 		const querySnapshot = await getDocs(queryData);
@@ -40,6 +52,7 @@ function MyOrders() {
 					newObj[key] = doc.data()[key];
 				}
 			}
+			newObj["docId"] = doc.id;
 			arr.push(newObj);
 		});
 		if (arr.length == 0) {
@@ -73,6 +86,7 @@ function MyOrders() {
 									quantity={item.quantity}
 									createdAt={item.createdAt}
 									orderStatus={item.orderStatus}
+									onCancel = {handleOrderCancel.bind(this,item.docId)}
 								/>
 							);
 						}}

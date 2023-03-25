@@ -134,10 +134,11 @@ function Register(props) {
 							<TextInput
 								placeholder="Email"
 								style={styles.inputText}
-								autoCapitalize={false}
-								autoCorrect={false}
+								autoCapitalize= "none"
+								autoCorrect= {false}
 								onChangeText={setEmail}
 								value={email}
+								keyboardType = "email-address"
 							/>
 						</View>
 						<View style={styles.inputView}>
@@ -145,8 +146,8 @@ function Register(props) {
 								placeholder="Password"
 								style={styles.inputText}
 								secureTextEntry={true}
-								autoCapitalize={false}
-								autoCorrect={false}
+								autoCapitalize= "none"
+								autoCorrect= {false}
 								onChangeText={setPassword}
 								value={password}
 							/>
@@ -156,8 +157,8 @@ function Register(props) {
 								placeholder="Confirm Password"
 								style={styles.inputText}
 								secureTextEntry={true}
-								autoCapitalize={false}
-								autoCorrect={false}
+								autoCapitalize="none"
+								autoCorrect= {false}
 								onChangeText={setConfirmPassword}
 								value={confirmPassword}
 							/>
@@ -184,8 +185,8 @@ function Register(props) {
 							<TextInput
 								placeholder="GSTIN (optional)"
 								style={styles.inputText}
-								autoCapitalize={false}
-								autoCorrect={false}
+								autoCapitalize= "characters"
+								autoCorrect= {false}
 								onChangeText={setGstin}
 								value={gstin}
 							/>

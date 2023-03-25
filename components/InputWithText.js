@@ -14,6 +14,7 @@ function InputWithText(props) {
 					maxLength = {props.maxLength ? props.maxLength : 100}
 					keyboardType = {props.keyboardType ? props.keyboardType : "default"}
 					selectTextOnFocus = {false}
+					autoCapitalize = {props.capital ? "characters" : "sentence"}
 				/>
 			</View>
 		</View>
