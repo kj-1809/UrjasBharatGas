@@ -18,13 +18,13 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "2",
+      "buildNumber": "4",
       "supportsTablet": true,
       "bundleIdentifier": "com.urjasbharatgas.urjas"
     },
     "android": {
       "package": "com.urjasbharatgas.urjas",
-      "versionCode": 4,
+      "versionCode": 6,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

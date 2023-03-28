@@ -100,6 +100,17 @@ function MyAccount({ navigation }) {
 				Alert.alert("error", error);
 			});
 	}
+	function handleAccountDelete() {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+		signOut(auth)
+			.then(() => {
+				Alert.alert("Success", "Your account will be deleted in 30 days!");
+			})
+			.catch((error) => {
+				console.log("error", error);
+				Alert.alert("error", error);
+			});
+	}
 
 	if (!userData || uploadPending) {
 		return <LoadingView message="loading.." />;
@@ -152,6 +163,14 @@ function MyAccount({ navigation }) {
 					</View>
 					<View style={styles.signoutContainer}>
 						<NextButton onClick={handleSignOut}>Sign out</NextButton>
+					</View>
+					<View style={styles.deleteAccountContainer}>
+						<NextButton
+							onClick={handleAccountDelete}
+							style={styles.resetPasswordButton}
+						>
+							Delete Account 	
+						</NextButton>
 					</View>
 					<View style={styles.resetPasswordContainer}>
 						<NextButton
@@ -209,6 +228,9 @@ const styles = StyleSheet.create({
 	resetPasswordContainer: {
 		marginTop: "3%",
 		paddingBottom : "10%"
+	},
+	deleteAccountContainer : {
+		marginTop : "3%",
 	},
 	resetPasswordButton: {
 		marginHorizontal: "3%",

@@ -9,15 +9,16 @@ import {
 	limit,
 	orderBy,
 	deleteDoc,
-	doc
+	doc,
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useState, useEffect } from "react";
 import LoadingView from "../components/LoadingView";
-function MyOrders({navigation}) {
+import * as Haptics from "expo-haptics";
+function MyOrders({ navigation }) {
 	const [orders, setOrders] = useState([]);
 	const currentUser = auth.currentUser;
-
+	const [loading , setLoading] = useState(false);
 	const q = query(
 		collection(db, "orders"),
 		where("uid", "==", currentUser.uid),
@@ -25,15 +26,17 @@ function MyOrders({navigation}) {
 		limit(50)
 	);
 
-	async function handleOrderCancel(docId){
-		console.log("Delete")
-		console.log(docId)
+	async function handleOrderCancel(docId) {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+		setLoading(true)
 		try {
 			await deleteDoc(doc(db, "orders", docId));
+			setLoading(false)
 			navigation.navigate("Homepage");
-			Alert.alert("Order Deleted Successfully !")
+			Alert.alert("Order Cancelled Successfully !" , "Your order has been cancelled !");
 		} catch (err) {
-			Alert.alert("Some error occured !")
+			Alert.alert("Some error occured !" , "Please try again !");
+			setLoading(false)
 		}
 	}
 
@@ -44,10 +47,25 @@ function MyOrders({navigation}) {
 			let newObj = {};
 			for (let key in doc.data()) {
 				if (key == "createdAt") {
-					// date.toLocaleDateString() doesnt work properly on android! 
+					// date.toLocaleDateString() doesnt work properly on android!
 					const orderDate = new Date(doc.data()[key].seconds * 1000);
-					const indexToMonth = ["Jan" , "Feb" , "Mar" , "Apr" , "May" , "Jun" , "Jul" , "Aug" , "Sep" , "Oct" , "Nov" , "Dec"]
-					newObj.createdAt = `${orderDate.getDate()} ${indexToMonth[Number(orderDate.getMonth())]} ${orderDate.getFullYear()}`;
+					const indexToMonth = [
+						"Jan",
+						"Feb",
+						"Mar",
+						"Apr",
+						"May",
+						"Jun",
+						"Jul",
+						"Aug",
+						"Sep",
+						"Oct",
+						"Nov",
+						"Dec",
+					];
+					newObj.createdAt = `${orderDate.getDate()} ${
+						indexToMonth[Number(orderDate.getMonth())]
+					} ${orderDate.getFullYear()}`;
 				} else {
 					newObj[key] = doc.data()[key];
 				}
@@ -65,9 +83,11 @@ function MyOrders({navigation}) {
 		getDataFromFirebase(q);
 	}, []);
 
-
 	if (!orders[0] == 1) {
 		return <LoadingView message="fetching data.." />;
+	}
+	if(loading){
+		return <LoadingView message = "Cancelling order.." />;
 	}
 
 	return (
@@ -86,7 +106,25 @@ function MyOrders({navigation}) {
 									quantity={item.quantity}
 									createdAt={item.createdAt}
 									orderStatus={item.orderStatus}
-									onCancel = {handleOrderCancel.bind(this,item.docId)}
+									onCancel={() => {
+										Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+										Alert.alert(
+											"Confirm cancellation",
+											"Are you sure you want to cancel the order ?",
+											[
+												{
+													text: "Go back",
+													onPress: () => console.log("cancel"),
+													style : "cancel"
+												},
+												{
+													text : "Confirm",
+													onPress : handleOrderCancel.bind(this , item.docId),
+													style: "destructive",
+												}
+											]
+										);
+									}}
 								/>
 							);
 						}}

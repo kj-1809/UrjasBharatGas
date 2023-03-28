@@ -18,16 +18,14 @@ import { v4 as uuidv4 } from 'uuid';
 import * as Haptics from 'expo-haptics';
 
 import {
+	increment,
 	collection,
-	addDoc,
 	getDocs,
 	serverTimestamp,
 	where,
 	query,
-	updateDoc,
-	increment,
 	doc,
-	writeBatch,
+	runTransaction
 } from "firebase/firestore";
 import LoadingView from "../components/LoadingView";
 import SuccessAnimation from "../components/SuccessAnimation";
@@ -57,23 +55,6 @@ function OrderSummary({ navigation, route }) {
 		setFetchingData(false);
 	}
 
-	async function fetchCurrentOrderNumber() {
-		const fetchPromise = new Promise(async (resolve, reject) => {
-			const querySnapshot = await getDocs(collection(db, "ordernumber"));
-			querySnapshot.forEach((doc) => {
-				if (doc.data().curnum) {
-					resolve(doc.data().curnum);
-				} else {
-					reject(0);
-				}
-			});
-		});
-
-		// maybe implement try-catch here
-		const curOrderNum = await fetchPromise;
-		return curOrderNum;
-	}
-
 	useEffect(() => {
 		getUserData();
 	}, []);
@@ -94,36 +75,40 @@ function OrderSummary({ navigation, route }) {
 	}, [userData]);
 
 	async function uploadDataToFirebase() {
-
-		const curOrderNumber = await fetchCurrentOrderNumber();
-		const batch = writeBatch(db);
 		const uuid  = uuidv4()
-
 		const orderRef = doc(db, "orders", uuid);
-		batch.set(orderRef, {
-			orderId: curOrderNumber,
-			price:
-				Number(route.params.price) -
-				Number(route.params.discount) -
-				Number(additionalDiscount),
-			productId: route.params.productId,
-			productName: route.params.productName,
-			quantity: quantity,
-			uid: currentUser.uid,
-			orderStatus: "Pending",
-			createdAt: serverTimestamp(),
-		});
-
-		const updateOrderRef = doc(db, "ordernumber", "ie2fi9ZeUWWxhSQi4ssO");
-		batch.update(updateOrderRef, {
-			curnum: increment(1),
-		});
-
+		const orderNumberRef = doc(db, "ordernumber", "ie2fi9ZeUWWxhSQi4ssO");
 		try{
-			await batch.commit()
+			await runTransaction(db , async (transaction) => {
+				const orderNumberDoc = await transaction.get(orderNumberRef);
+				if(!orderNumberDoc.exists()){
+					throw "Document does not exist"
+				}
+				
+				const orderNumber = Number(orderNumberDoc.data().curnum);
+				console.log("Order Number from transaction : " , orderNumber);
+
+				transaction.set(orderRef, {
+					orderId: Number(orderNumber),
+					price:
+						Number(route.params.price) -
+						Number(route.params.discount) -
+						Number(additionalDiscount),
+					productId: route.params.productId,
+					productName: route.params.productName,
+					quantity: quantity,
+					uid: currentUser.uid,
+					orderStatus: "Pending",
+					createdAt: serverTimestamp(),
+				});
+
+				transaction.update(orderNumberRef, {
+					curnum: increment(1)
+				});
+			});
 		}catch(err){
 			throw Error(err)
-		}
+		}	
 	}
 
 	function handleSubmit() {
@@ -329,6 +314,7 @@ const styles = StyleSheet.create({
 	},
 	submitContainer: {
 		marginTop: "10%",
+		paddingBottom : "7%"
 	},
 	buttonStyle: {
 		marginHorizontal: "20%",
