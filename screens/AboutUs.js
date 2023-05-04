@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
 
 function AboutUs() {
 	return (
-		<View style = {styles.container}> 
+		<View style={styles.container}>
 			<ScrollView>
 				<Text style={styles.headingText}>About Us</Text>
 				<View style={styles.imageContainer}>
@@ -12,9 +12,8 @@ function AboutUs() {
 					/>
 				</View>
 				<Text style={styles.infoText}>
-					We are Leading providers of LPG In Himachal Pradesh , Jammu and
-					Kashmir , Punjab and Chandigarh . We have partnered up with Bharat Gas for
-					these services .{" "}
+					We are the non-domesitc LPG distributer of Bharat Petroleum for
+					Himachal Pradesh.{" "}
 				</Text>
 				<Text style={styles.contactUsText}>
 					{
@@ -24,7 +23,7 @@ function AboutUs() {
 				<Text style={styles.developerText}>
 					Contact developer : krishnajindal1809@icloud.com
 				</Text>
-			</ScrollView> 
+			</ScrollView>
 		</View>
 	);
 }
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
 		fontSize: 50,
 		marginTop: "5%",
 		fontFamily: "MontserratSemiBold",
-		textAlign : "center"
+		textAlign: "center",
 	},
 	infoText: {
 		fontSize: 15,
@@ -70,9 +69,9 @@ const styles = StyleSheet.create({
 	developerText: {
 		fontFamily: "MontserratSemiBold",
 		fontSize: 12,
-		textAlign : "center",
-		marginTop : "10%",
-		paddingBottom : "10%"
+		textAlign: "center",
+		marginTop: "10%",
+		paddingBottom: "10%",
 	},
 });
 

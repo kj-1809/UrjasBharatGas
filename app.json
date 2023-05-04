@@ -2,7 +2,7 @@
   "expo": {
     "name": "Urjas Bharat Gas",
     "slug": "UrjasBharatGas",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,13 +18,13 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "4",
+      "buildNumber": "5",
       "supportsTablet": true,
       "bundleIdentifier": "com.urjasbharatgas.urjas"
     },
     "android": {
       "package": "com.urjasbharatgas.urjas",
-      "versionCode": 6,
+      "versionCode": 7,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

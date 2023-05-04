@@ -19,11 +19,14 @@ function MyOrders({ navigation }) {
 	const [orders, setOrders] = useState([]);
 	const currentUser = auth.currentUser;
 	const [loading , setLoading] = useState(false);
+	const threeMonths = new Date(
+		new Date().getTime() - 90 * 24 * 60 * 60 * 1000
+	);
 	const q = query(
 		collection(db, "orders"),
 		where("uid", "==", currentUser.uid),
-		orderBy("orderId", "desc"),
-		limit(50)
+		where("createdAt", ">=", threeMonths) ,
+		orderBy("createdAt", "desc"),
 	);
 
 	async function handleOrderCancel(docId) {

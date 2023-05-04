@@ -25,7 +25,7 @@ function Register(props) {
 	const [address, setAddress] = useState("");
 	const [gstin, setGstin] = useState("");
 	const [registerPending, setRegisterPending] = useState(false);
-	const [phone, setPhone] = useState();
+	const [phone, setPhone] = useState("");
 
 	function handleSubmit() {
 		//Create a new user

@@ -132,7 +132,7 @@ function OrderSummary({ navigation, route }) {
 
 				const options = {
 					method: "POST",
-					url: "https://urja-proxy-api-production.up.railway.app/api/send",
+					url: "https://urjas-bharat-gas-api.cyclic.app/api/send",
 					params: {
 						phone: userPhoneNumber,
 						item_name: route.params.productName,
