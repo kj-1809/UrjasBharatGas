@@ -141,6 +141,7 @@ function OrderSummary({ navigation, route }) {
 							Number(route.params.discount) -
 							Number(additionalDiscount),
 						type: "orderplaced",
+						quantity : quantity
 					},
 				};
 				axios
